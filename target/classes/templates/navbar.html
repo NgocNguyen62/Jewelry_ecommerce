@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>User</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <!--  <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet" />-->
+
+</head>
+<body>
+<div th:fragment="navbar">
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Admin</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a th:href="@{/index}">Home</a></li>
+        <li><a th:href="@{/user/index}">Users</a></li>
+        <li><a th:unless="${#authorization.expression('isAuthenticated()')}" th:href="@{/login}">Login</a></li>
+        <li><a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/logout}">Logout</a></li>
+        <li><a th:if="${#authorization.expression('isAuthenticated()')}" th:text="${#authentication.name}"></a></li>
+        <li><a th:href="@{/cate/index}">Category</a></li>
+        <li><a th:href="@{/product/index}">Products</a></li>
+      </ul>
+    </div>
+  </nav>
+</div>
+</body>
+</html>

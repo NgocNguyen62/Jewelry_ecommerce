@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Quản lý tài khoản</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link type="text/css" rel="stylesheet" href="bootstrap.min.css" th:href="@{bootstrap.min.css}"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    #new-button{
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<!--<div th:insert="/navbar :: navbar"></div>-->
+
+<!--<div th:text="${#authentication.principal.authorities}">-->
+<!--</div>-->
+<!--<div th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">-->
+<!--    ADMIN section-->
+<!--</div>-->
+
+<div th:insert="/navbar :: navbar"></div>
+<div class="col-3"></div>
+<div class="container col-6">
+  <h3>Quản lý tài khoản</h3>
+  <a id="new-button" href="/user/add" class="btn btn-success">Tạo mới</a>
+  <table class="table table-active">
+    <tr>
+      <th>Email</th>
+      <th>Số điện thoại</th>
+      <th>Quyền</th>
+      <th>Trạng thái</th>
+
+    </tr>
+    <tr th:each="user : ${users}">
+      <td th:text="${user.email}"></td>
+      <td th:text="${user.phone}"></td>
+      <td th:text="${user.role}"></td>
+      <td th:if="${user.userStatus} == 0" th:text="'Không khóa'"></td>
+      <td th:if="${user.userStatus} == 1" th:text="'Khóa'"></td>
+
+      <td>
+        <a th:href="@{/user/edit?id={id}(id=${user.id})}" class="btn btn-primary">Chỉnh sửa</a>
+        <a th:href="@{/user/delete?id={id}(id=${user.id})}" class="btn btn-danger">Xóa</a>
+<!--        <a th:href="@{/user/details?id={id}(id=${user.id})}" class="btn btn-primary">View</a>-->
+      </td>
+    </tr>
+  </table>
+<!--  <a href="/user/add" class="btn btn-success">Add User</a>-->
+</div>
+<!--<div th:insert="/user/fragment :: demo"></div>-->
+</body>
+</html>
