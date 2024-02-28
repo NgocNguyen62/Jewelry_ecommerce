@@ -3,60 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <title>User</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+  <script src="/js/form.js"></script>
+  <style>
+    form{
+      width: 100%
+    }
+    .form-group{
+      margin: 10px;
+      /*width: 400px;*/
+      width: 80%;
+    }
+    label.error{
+      color: red;
+    }
 
+  </style>
 </head>
 <body>
 <div class="col-3"></div>
 <div class="container col-6" >
   <div class="col-md-auto">
-    <form th:fragment="user-form" th:object="${user}" th:action="@{save}" action="#" method="post">
-
+    <form id="user-form" th:fragment="user-form" th:object="${user}" th:action="@{save}" action="#" method="post">
+      <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+        <p th:each="err : ${#fields.allErrors()}" th:text="${err}"></p>
+      </div>
       <input type="hidden" th:if="${editMode}" th:field="*{id}">
-      <div>
+      <div class="form-group">
         <label th:text="Email" th:for="email"></label>
         <input type="text" th:field = "*{email}" class="form-control">
       </div>
-      <div>
-        <label th:text="Password" th:for="password"></label>
+      <div class="form-group">
+        <label th:text="'Mật khẩu'" th:for="password"></label>
         <input type="password" th:field="*{password}" class="form-control">
       </div>
-      <div>
-        <label th:text="Role" th:for="role"></label>
+      <div class="form-group">
+        <label th:text="'Nhập lại mật khẩu'" th:for="re-password"></label>
+        <input type="password" class="form-control" name="re-password">
+      </div>
+      <div class="form-group">
+        <label th:text="'Quyền'" th:for="role"></label>
         <select th:field="*{role}">
           <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
         </select>
       </div>
-      <div>
+      <div class="form-group">
         <label th:text="'Họ'" th:for="first_name"></label>
-        <input type="text" th:field="*{firstName}">
+        <input type="text" th:field="*{firstName}" class="form-control">
       </div>
 
-      <div>
+      <div class="form-group">
         <label th:text="'Tên'" th:for="last_name"></label>
-        <input type="text" th:field="*{lastName}">
+        <input type="text" th:field="*{lastName}" class="form-control">
       </div>
-      <div>
-        <label for="gender">Gender:</label>
+      <div class="form-group">
+        <label for="gender">Giới tính:</label>
         <select id="gender" name="gender" th:field="*{gender}">
           <option value="nam">Nam</option>
           <option value="nữ">Nữ</option>
         </select>
       </div>
-      <div>
+      <div class="form-group">
         <label th:text="'Ngày sinh'" th:for="birthday"></label>
-        <input type="date" th:field="*{birthday}">
+        <input type="date" th:field="*{birthday}" class="form-control">
       </div>
-      <div>
+      <div class="form-group">
         <label th:text="'Số điện thoại'" th:for="phone"></label>
-        <input type="text" th:field="*{phone}">
+        <input type="text" th:field="*{phone}" class="form-control">
       </div>
-      <div>
+      <div class="form-group">
         <label th:text="'Địa chỉ'" th:for="address"></label>
-        <input type="text" th:field="*{address}">
+        <input type="text" th:field="*{address}" class="form-control">
       </div>
-      <div>
+      <div class="form-group">
         <label th:text="'Trạng thái'" th:for="user_status"></label>
         <select th:field="*{userStatus}">
 <!--          <option th:each="status : ${allStatus}" th:value="${status}" th:text="${status}"></option>-->
@@ -64,9 +86,30 @@
           <option th:value="1" th:text="'Khóa'"></option>
         </select>
       </div>
-      <input type="submit" class="btn btn-success" value="Save"/>
+      <input type="submit" class="btn btn-success" value="Lưu"/>
     </form>
   </div>
 </div>
+<!--<script>-->
+<!--  $().ready(function (){-->
+<!--    $("user-form").validate({-->
+<!--      onfocusout: false,-->
+<!--      onkeyup: false,-->
+<!--      onclick: false,-->
+<!--      rules: {-->
+<!--        "email":{-->
+<!--          require: true,-->
+<!--          // email: true,-->
+<!--        },-->
+<!--      },-->
+<!--      messages: {-->
+<!--        "email": {-->
+<!--          require: "Nhập email",-->
+<!--          // email: "Email phải đúng định dạng @domain.com"-->
+<!--        },-->
+<!--      }-->
+<!--    })-->
+<!--  })-->
+<!--</script>-->
 </body>
 </html>

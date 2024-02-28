@@ -13,10 +13,16 @@ import java.util.stream.Collectors;
 public class CustomUserDetails implements UserDetails {
     private String username;
     private String password;
+    private boolean status;
     private List<GrantedAuthority> authorities;
     public CustomUserDetails(User user){
         username = user.getEmail();
         password = user.getPassword();
+        if(user.getUserStatus() == 0){
+            status = true;
+        } else {
+            status = false;
+        }
         authorities = Arrays.stream(user.getRole().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
@@ -40,21 +46,21 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return status;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

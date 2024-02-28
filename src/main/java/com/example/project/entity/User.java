@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -38,4 +39,8 @@ public class User {
     private String address;
     @Column(name = "user_status")
     private int userStatus;
+    private LocalDateTime create_at;
+    private String create_by;
+    private LocalDateTime update_at;
+    private String update_by;
 }

@@ -49,7 +49,7 @@ public class WebSercurityConfig {
                 ).formLogin(
                         form ->form
                                 .loginPage("/login")
-                                .loginProcessingUrl("/login")
+//                                .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/user/add")
                                 .permitAll()
                 ).logout(
