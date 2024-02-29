@@ -25,8 +25,12 @@ VALUES
 DROP TABLE if exists `category`;
 CREATE table `category`(
     `id` bigint primary key AUTO_INCREMENT,
-    `categoryName` varchar(255) not null ,
-    `categoryDescription` text,
-    `categoryStatus` bit(1) not null
+    `category_name` varchar(255) not null ,
+    `category_description` text,
+    `category_status` bit(1) not null,
+    `create_at` DATETIME,
+    `create_by` varchar(100),
+    `update_at` DATETIME,
+    `update_by` varchar(100)
 ) ENGINE = InnoDB;
 
