@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+    <style>
+        label.error{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container col-6" >
+        <form id="productForm" th:fragment="product-form" th:object="${product}" th:action="@{save}" method="post" enctype="multipart/form-data">
+            <input type="hidden" th:if="${editMode}" th:field="*{id}">
+
+            <div>
+                <label th:text="Avatar" th:for="file"></label>
+                <input type="file" name="file" class="form-control" id="uploadAvatar">
+<!--                <button type="submit">Upload</button>-->
+            </div>
+            <div id = "image-preview"></div>
+            <div>
+                <label th:text="'Tên sản phẩm'" th:for="product_name"></label>
+                <input type="text" th:field="*{productName}" class="form-control">
+            </div>
+            <div>
+                <label th:text="'Phân loại'" th:for="category"></label>
+                <select th:field="*{category.id}">
+                    <option th:each="cate : ${cates}" th:value="${cate.getId()}" th:text="${cate.getCategoryName()}"></option>
+                </select>
+            </div>
+            <div>
+                <label th:text="'Mô tả'" th:for="product_description"></label>
+                <textarea type="text" th:field="*{description}" class="form-control"></textarea>
+            </div>
+            <div>
+                <label th:text="'Giá gốc'" th:for="price"></label>
+                <input type="text" th:field="*{price}" class="form-control">
+            </div>
+            <div>
+                <label th:text="'Giá khuyến mại'" th:for="discount"></label>
+                <input type="text" th:field="*{discount}" class="form-control">
+            </div>
+            <div>
+                <label th:text="'Số lượng'" th:for="quantity"></label>
+                <input type="text" th:field="*{quantity}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label th:text="'Trạng thái'" th:for="product_status"></label>
+                <select th:field="*{productStatus}">
+                    <!--          <option th:each="status : ${allStatus}" th:value="${status}" th:text="${status}"></option>-->
+                    <option th:value="0" th:text="'Không khóa'"></option>
+                    <option th:value="1" th:text="'Khóa'"></option>
+                </select>
+            </div>
+            <input type="submit" class="btn btn-success" value="Save"/>
+        </form>
+    </div>
+    <script>
+        $().ready(function (){
+            $("#productForm").validate({
+                onfocusout: false,
+                onkeyup: false,
+                onclick: false,
+                rules: {
+                    "name":{
+                        required: true,
+                    }
+                },
+                messages: {
+                    "name":{
+                        required: "Nhập tên",
+                    }
+                }
+            })
+        })
+        document.getElementById("uploadAvatar").addEventListener("change", function(event) {
+            previewImage(event);
+        });
+        function previewImage(event) {
+            var input = event.target;
+            var reader = new FileReader();
+            reader.onload = function () {
+                var imgElement = document.createElement("img");
+                imgElement.src = reader.result;
+                imgElement.style.width = "100px";
+                imgElement.style.height = "80px";
+                document.getElementById("image-preview").innerHTML = "";
+                document.getElementById("image-preview").appendChild(imgElement);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sản phẩm</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    #new-product{
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<div th:insert="/navbar :: navbar"></div>
+
+<div class="col-3"></div>
+<div class="container col-6">
+  <h3>Quản lý sản phẩm</h3>
+  <a id = "new-product" href="/product/add" class="btn btn-success">Tạo mới</a>
+  <table class="table table-active">
+    <tr>
+      <th>Avatar</th>
+      <th>Tên sản phẩm</th>
+      <th>Phân loại</th>
+      <th>Giá gốc</th>
+      <th>Giá khuyến mại</th>
+      <th>Trạng thái</th>
+
+    </tr>
+    <tr th:each="item : ${products}">
+      <td><img th:src="${item.avatar}" style="width:150px;height:150px;"></td>
+      <td th:text="${item.productName}"></td>
+      <td th:text="${item.category.getCategoryName()}"></td>
+      <td th:text="${item.price}"></td>
+      <td th:text="${item.discount}"></td>
+      <td th:if="${item.productStatus} == 0" th:text="'Không khóa'"></td>
+      <td th:if="${item.productStatus} == 1" th:text="'Khóa'"></td>
+
+      <td>
+        <a th:href="@{/product/edit?id={id}(id=${item.id})}" class="btn btn-primary">Edit</a>
+        <a th:href="@{/product/delete?id={id}(id=${item.id})}" class="btn btn-danger">Delete</a>
+<!--        <a th:href="@{/product/details?id={id}(id=${item.id})}" class="btn btn-primary">View</a>-->
+<!--        <a th:href="@{/cart/add?id={id}(id=${item.id})}" class="btn btn-primary">Add to Cart</a>-->
+      </td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>
