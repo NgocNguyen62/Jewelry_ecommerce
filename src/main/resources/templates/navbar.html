@@ -22,7 +22,7 @@
         <li><a th:unless="${#authorization.expression('isAuthenticated()')}" th:href="@{/login}">Login</a></li>
         <li><a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/logout}">Logout</a></li>
         <li><a th:if="${#authorization.expression('isAuthenticated()')}" th:text="${#authentication.name}"></a></li>
-        <li><a th:href="@{/cate/index}">Category</a></li>
+        <li><a th:href="@{/category/index}">Category</a></li>
         <li><a th:href="@{/product/index}">Products</a></li>
       </ul>
     </div>
