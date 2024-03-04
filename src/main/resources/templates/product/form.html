@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Product Form</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -35,8 +35,18 @@
                 </select>
             </div>
             <div>
+                <label th:text="'Giới tính'" th:for="gender"></label>
+                <select th:field="*{gender}">
+                    <option th:each="item : ${genders}" th:value="${item}" th:text="${item}"></option>
+                </select>
+            </div>
+            <div>
                 <label th:text="'Mô tả'" th:for="product_description"></label>
                 <textarea type="text" th:field="*{description}" class="form-control"></textarea>
+            </div>
+            <div>
+                <label th:text="'Chọn ảnh minh họa'" th:for="files"></label>
+                <input type="file" name="files"  th:field="*{files}" class="form-control" id="upload-images" multiple>
             </div>
             <div>
                 <label th:text="'Giá gốc'" th:for="price"></label>

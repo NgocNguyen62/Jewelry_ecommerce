@@ -1,9 +1,12 @@
 package com.ngocnguyen.jewelry_ecommerce.service.implement;
 
+import com.ngocnguyen.jewelry_ecommerce.component.CustomUserDetails;
 import com.ngocnguyen.jewelry_ecommerce.entity.Product;
 import com.ngocnguyen.jewelry_ecommerce.repository.ProductRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,6 +14,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,10 +28,39 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product create(Product product) {
+    public Product create(Product product) throws Exception {
         productRepository.save(product);
         String avatar = ImageUpload(product.getId(), product.getFile());
         product.setAvatar(avatar);
+        StringBuilder builder = new StringBuilder();
+        for (MultipartFile file : product.getFiles()) {
+           String image = ImageUpload(product.getId(), file);
+           builder.append(image).append(",");
+        }
+
+        if(builder.toString().endsWith(",")){
+            builder = new StringBuilder(builder.substring(0, builder.length() - 1));
+        }
+        product.setImages(builder.toString());
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+            if (product.getId() == null) {
+                product.setCreateAt(LocalDateTime.now());
+                product.setCreateBy(currentUser.getUserId());
+            } else {
+                Optional<Product> temp = productRepository.findById(product.getId());
+                if(temp.isPresent()){
+                    product.setCreateAt(temp.get().getCreateAt());
+                    product.setCreateBy(temp.get().getCreateBy());
+                    product.setUpdateAt(LocalDateTime.now());
+                    product.setUpdateBy(currentUser.getUserId());
+                }
+                temp.orElseThrow();
+            }
+        } else {
+            throw new Exception("Chưa đăng nhập");
+        }
         return productRepository.save(product);
     }
 

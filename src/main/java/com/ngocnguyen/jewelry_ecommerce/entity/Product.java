@@ -53,4 +53,6 @@ public class Product {
 
     @Transient
     private MultipartFile file;
+    @Transient
+    private MultipartFile[] files;
 }
