@@ -36,6 +36,8 @@ public class ProductController {
         model.addAttribute("products", productService.findAll());
         return "/product/index";
     }
+
+
     @GetMapping("add")
     public String addProduct(Model model){
         model.addAttribute("editMode", true);
@@ -43,6 +45,11 @@ public class ProductController {
         model.addAttribute("product", product);
         return "product/add";
     }
+    /**
+     * Save product to DB
+     * @param product
+     * @return product/index
+     */
     @PostMapping("save")
     public String save(@ModelAttribute("product") Product product) throws Exception {
         try {
@@ -53,6 +60,7 @@ public class ProductController {
         }
         return "redirect:/product/index";
     }
+
     @GetMapping("edit")
     public String edit(@RequestParam("id") Long id, Model model){
         Optional<Product> productEdit = productService.findById(id);
@@ -61,6 +69,13 @@ public class ProductController {
         productEdit.orElseThrow();
         return "product/edit";
     }
+
+    /**
+     * Delete in DB
+     * @param id
+     * @return product/index
+     * @throws Exception
+     */
     @GetMapping("delete")
     public String delete(@RequestParam("id") Long id) throws Exception {
         try {

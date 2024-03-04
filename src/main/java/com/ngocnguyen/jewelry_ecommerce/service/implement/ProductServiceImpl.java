@@ -4,10 +4,12 @@ import com.ngocnguyen.jewelry_ecommerce.component.CustomUserDetails;
 import com.ngocnguyen.jewelry_ecommerce.entity.Product;
 import com.ngocnguyen.jewelry_ecommerce.repository.ProductRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.ProductService;
+import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedOutputStream;
@@ -65,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public String ImageUpload(Long productId, MultipartFile uploadFile){
-        String folder = "src/main/resources/static/upload";
+        String folder = CommonConstants.FOLDER_UPLOAD;
         String fileName = "";
         try{
             byte[] bytes = uploadFile.getBytes();
@@ -93,7 +95,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Long id) throws Exception {
+        File file = new File(CommonConstants.FOLDER_UPLOAD+"/"+id);
+        try {
+            FileSystemUtils.deleteRecursively(file);
+        } catch (Exception e){
+            throw new Exception(e);
+        }
         productRepository.deleteById(id);
     }
 }
