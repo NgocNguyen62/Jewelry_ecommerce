@@ -34,3 +34,26 @@ CREATE table `category`(
     `update_by` bigint
 ) ENGINE = InnoDB;
 
+drop table if exists `products`;
+create table `products`(
+    `id` bigint primary key AUTO_INCREMENT,
+    `product_name` varchar(255) not null ,
+    `category_id` bigint ,
+    `gender` varchar(30),
+    `avatar` varchar(255),
+    `images` varchar(500),
+    `product_description` TEXT,
+    `price` double not null ,
+    `discount` double,
+    `quantity` int,
+    `product_status` bit(1) not null ,
+    `sales` int default 0,
+    `create_at` DATETIME,
+    `create_by` bigint,
+    `update_at` DATETIME,
+    `update_by` bigint,
+    foreign key (category_id) references category(id)
+)
+
+
+
