@@ -46,4 +46,7 @@ public class User {
     private LocalDateTime updateAt;
     @Column(name = "update_by")
     private Long updateBy;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
+    private Cart cart;
 }

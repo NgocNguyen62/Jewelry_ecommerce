@@ -53,7 +53,21 @@ create table `products`(
     `update_at` DATETIME,
     `update_by` bigint,
     foreign key (category_id) references category(id)
-)
+);
 
+create table `cart` (
+    `id` bigint primary key AUTO_INCREMENT,
+    `user_id` bigint,
+    foreign key (user_id) references user(id)
+);
+
+create table `cart_items`(
+    `id` bigint primary key  auto_increment,
+    `cart_id` bigint,
+    `product_id` bigint,
+    `quantity` int default 1,
+    foreign key (cart_id) references cart(id),
+    foreign key (product_id) references products(id)
+)
 
 

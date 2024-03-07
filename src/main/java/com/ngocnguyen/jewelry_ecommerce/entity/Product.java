@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -50,6 +51,9 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+//    @ManyToMany(mappedBy = "products", cascade = CascadeType.ALL)
+//    private List<CartItems> cartItems;
 
     @Transient
     private MultipartFile file;

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "category")
@@ -30,4 +31,7 @@ public class Category {
     private LocalDateTime updateAt;
     @Column(name = "update_by")
     private Long updateBy;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Product> products;
 }
