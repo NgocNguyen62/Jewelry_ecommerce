@@ -1,5 +1,7 @@
 package com.ngocnguyen.jewelry_ecommerce.service;
 
+import com.ngocnguyen.jewelry_ecommerce.dto.CartDTO;
+import com.ngocnguyen.jewelry_ecommerce.dto.CartItemDTO;
 import com.ngocnguyen.jewelry_ecommerce.entity.Cart;
 import com.ngocnguyen.jewelry_ecommerce.entity.CartItems;
 import java.util.List;
@@ -10,6 +12,6 @@ public interface CartService {
     void deleteItem(Long productId) throws Exception;
     void deleteAll(Long id) throws Exception;
     CartItems updateQuantity(Long id, int quantity) throws Exception;
-    List<CartItems> getAllCartItems() throws Exception;
-    Optional<Cart> getCart() throws Exception;
+    List<CartItemDTO> getAllCartItems() throws Exception;
+    CartDTO getCart() throws Exception;
 }
