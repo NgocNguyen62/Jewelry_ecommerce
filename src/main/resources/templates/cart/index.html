@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ hàng</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    .table td, .table th {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .table td, .table th{
+      text-align: center;
+    }
+    .total{
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+<div th:insert="/navbar :: navbar"></div>
+
+<div class="col-3"></div>
+<div class="container col-6">
+  <h3>Giỏ hàng</h3>
+  <table class="table table-active">
+    <tr>
+      <th>Avatar</th>
+      <th>Tên sản phẩm</th>
+      <th>Phân loại</th>
+      <th>Giá gốc</th>
+      <th>Giá khuyến mại</th>
+      <th>Số lượng</th>
+      <th>Tạm tính</th>
+    </tr>
+    <tr th:each="item : ${items}">
+      <td><img th:src="${item.product.avatar}" style="width:75px;height:75px;"></td>
+      <td th:text="${item.product.productName}"></td>
+      <td th:text="${item.product.category.getCategoryName()}"></td>
+      <td th:text="${item.product.price}"></td>
+      <td th:text="${item.product.discount}"></td>
+      <td>
+        <a class="btn" th:href="@{/cart/update(id=${item.product.getId()}, quantity=-1)}">-</a>
+        <span th:text="${item.quantity}"></span>
+        <a class="btn" th:href="@{/cart/update(id=${item.product.getId()}, quantity=1)}">+</a>
+      </td>
+      <td th:text="${item.getTotalPrice()}"></td>
+      <td>
+        <a th:href="@{/cart/remove?id={id}(id=${item.product.getId()})}" class="btn btn-danger"> Xóa </a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="total">Tổng tiền: <span th:text="${cart.getCartTotalPrice()}"></span></div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>
