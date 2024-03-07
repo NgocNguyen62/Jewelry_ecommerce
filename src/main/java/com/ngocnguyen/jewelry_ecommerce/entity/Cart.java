@@ -34,14 +34,4 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<CartItems> cartItems;
 
-    public double getCartTotalPrice(){
-        double result = 0;
-        for (CartItems i:cartItems) {
-            result += i.getTotalPrice();
-        }
-        return result;
-    }
-    public int count(){
-        return cartItems.size();
-    }
 }

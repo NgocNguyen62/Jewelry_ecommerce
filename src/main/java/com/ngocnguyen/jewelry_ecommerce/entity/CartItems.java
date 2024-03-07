@@ -42,8 +42,4 @@ public class CartItems {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public double getTotalPrice(){
-        return this.product.getDiscount() * this.getQuantity();
-    }
-
 }
