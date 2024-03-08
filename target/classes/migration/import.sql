@@ -68,6 +68,30 @@ create table `cart_items`(
     `quantity` int default 1,
     foreign key (cart_id) references cart(id),
     foreign key (product_id) references products(id)
+);
+drop table if exists `orders`;
+create table `orders`(
+    `id` bigint primary key auto_increment,
+    `user_id` bigint,
+    `shipping` double,
+    `order_status` varchar(50),
+    `time_order` datetime,
+    `total` double,
+    `receiver_name` varchar(255),
+    `receiver_phone` varchar(10),
+    `receiver_address` varchar(255),
+    `note` varchar(255),
+    foreign key (user_id) references user(id)
+);
+drop table if exists `order_items`;
+create table `order_items`(
+    `id` bigint primary key auto_increment,
+    `order_id` bigint,
+    `product_id` bigint,
+    `product_price` double,
+    `quantity` int,
+    foreign key (order_id) references `orders`(id),
+    foreign key (product_id) references products(id)
 )
 
 

@@ -12,6 +12,7 @@ import com.ngocnguyen.jewelry_ecommerce.repository.ProductRepository;
 import com.ngocnguyen.jewelry_ecommerce.repository.UserRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.CartService;
 import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -94,7 +95,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteAll(Long id) throws Exception {
+    @Transactional
+    public void deleteAll() throws Exception {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();

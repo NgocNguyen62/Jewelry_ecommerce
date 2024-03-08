@@ -43,12 +43,13 @@ public class WebSercurityConfig {
         http
                 .authorizeHttpRequests((authorize)->authorize
                         .requestMatchers("/user/add").hasAuthority("ADMIN")
+//                        .requestMatchers("/cart/index").
                         .anyRequest().permitAll()
                 ).formLogin(
                         form ->form
                                 .loginPage("/login")
 //                                .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/user/add")
+                                .defaultSuccessUrl("/user/index")
                                 .permitAll()
                 ).logout(
                         logout->logout
