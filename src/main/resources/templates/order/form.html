@@ -65,6 +65,7 @@
                 <tr th:each="item : ${items}">
                     <td>
                         <img th:src="${item.product.avatar}" style="width:75px;height:75px;">
+                        <br>
                         <span th:text="${item.product.productName}"></span>
                     </td>
                     <td th:text="${item.product.category.getCategoryName()}"></td>
@@ -84,6 +85,7 @@
             </table>
         </div>
     </div>
+
 <!--    <div>-->
 <!--        <a class="btn btn-success" th:href="@{/order/order}">Đặt hàng</a>-->
 <!--    </div>-->

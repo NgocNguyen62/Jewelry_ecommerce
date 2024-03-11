@@ -12,6 +12,7 @@ import com.ngocnguyen.jewelry_ecommerce.repository.UserRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.CartService;
 import com.ngocnguyen.jewelry_ecommerce.service.OrderService;
 import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,6 +46,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
     @Override
+    @Transactional
     public Order createOrder(Order form) throws Exception {
         Order newOrder = preview();
         newOrder.setReceiverAddress(form.getReceiverAddress());
@@ -109,17 +111,20 @@ public class OrderServiceImpl implements OrderService {
     public Order preview() throws Exception {
         Order newOrder = new Order();
         CartDTO cart = cartService.getCart();
-        newOrder.setTotalPrice(cart.getCartTotalPrice());
-        User currentUser = getCurrentUser();
-        newOrder.setUser(currentUser);
-        newOrder.setShipping(CommonConstants.SHIPPING);
-        newOrder.setStatus(CommonConstants.WAIT_STATUS);
-        newOrder.setOrderTime(LocalDateTime.now());
-        newOrder.setReceiverName(currentUser.getFirstName() + " " + currentUser.getLastName());
-        newOrder.setReceiverPhone(currentUser.getPhone());
-        newOrder.setReceiverAddress(currentUser.getAddress());
-
-        return newOrder;
+        if(cart != null && cart.count() > 0){
+            newOrder.setTotalPrice(cart.getCartTotalPrice());
+            User currentUser = getCurrentUser();
+            newOrder.setUser(currentUser);
+            newOrder.setShipping(CommonConstants.SHIPPING);
+            newOrder.setStatus(CommonConstants.WAIT_STATUS);
+            newOrder.setOrderTime(LocalDateTime.now());
+            newOrder.setReceiverName(currentUser.getFirstName() + " " + currentUser.getLastName());
+            newOrder.setReceiverPhone(currentUser.getPhone());
+            newOrder.setReceiverAddress(currentUser.getAddress());
+            return newOrder;
+        } else {
+            throw new Exception("'Giỏ hàng không có sản phẩm'");
+        }
     }
 
     @Override

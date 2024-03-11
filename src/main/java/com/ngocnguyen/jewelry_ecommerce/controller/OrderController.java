@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.net.URLEncoder;
+
 @Controller
 @RequestMapping("order")
 public class OrderController {
@@ -22,10 +24,15 @@ public class OrderController {
 
     @GetMapping("preview")
     public String preview(Model model) throws Exception {
-        Order order = orderService.preview();
-        model.addAttribute("order", order);
-        model.addAttribute("items", cartService.getAllCartItems());
-        return "/order/form";
+        try {
+            Order order = orderService.preview();
+            model.addAttribute("order", order);
+            model.addAttribute("items", cartService.getAllCartItems());
+            return "/order/form";
+        } catch (Exception ex) {
+            String encodeMessage = URLEncoder.encode(ex.getMessage(), "UTF-8");
+            return "redirect:error?message=" + encodeMessage;
+        }
     }
 
     @PostMapping ("order")
