@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+    <script src="/js/form.js"></script>
+    <style>
+        body{
+            margin: 10px;
+        }
+        .preview-order{
+            display: flex;
+        }
+        .form{
+            margin: 20px;
+            flex: 40%;
+        }
+        .items-order{
+            flex: 60%;
+        }
+        label.error{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="preview-order">
+        <div class="form">
+            <form id="user-receiver" th:object="${order}" th:action="@{order}" method="post">
+                <input type="hidden" th:field="*{id}">
+                <div class="form-group">
+                    <label th:text="'Họ và tên'" th:for="receiver_name"></label>
+                    <input type="text" th:field="*{receiverName}" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label th:text="'Số điện thoại'" th:for="receiver_phone"></label>
+                    <input type="text" th:field="*{receiverPhone}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label th:text="'Địa chỉ'" th:for="receiver_address"></label>
+                    <input type="text" th:field="*{receiverAddress}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label th:text="'Ghi chú'" th:for="note"></label>
+                    <textarea type="text" th:field="*{note}"></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Đặt hàng</button>
+            </form>
+        </div>
+        <div class="items-order">
+            <h3>Chi tiết đơn hàng</h3>
+            <table class="table table-active">
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Phân loại</th>
+                    <th>Giá gốc</th>
+                    <th>Giá khuyến mại</th>
+                    <th>Số lượng</th>
+                </tr>
+                <tr th:each="item : ${items}">
+                    <td>
+                        <img th:src="${item.product.avatar}" style="width:75px;height:75px;">
+                        <br>
+                        <span th:text="${item.product.productName}"></span>
+                    </td>
+                    <td th:text="${item.product.category.getCategoryName()}"></td>
+                    <td th:text="${item.product.price}"></td>
+                    <td th:text="${item.product.discount}"></td>
+                    <td>
+                        <span th:text="${item.quantity}"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="total">Tổng tiền: <span th:text="${order.getTotalPrice()}"></span></div>
+                        <div>Phí vận chuyển: <span th:text="${order.getShipping()}"></span></div>
+<!--                        <div>Thời gian đặt: <span th:text="${order.getOrderTime()}"></span></div>-->
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+<!--    <div>-->
+<!--        <a class="btn btn-success" th:href="@{/order/order}">Đặt hàng</a>-->
+<!--    </div>-->
+<script>
+    $().ready(function (){
+        $("#user-receiver").validate({
+            onfocusout: false,
+            onkeyup: false,
+            onclick: false,
+            rules: {
+                "receiverName":{
+                    required: true,
+                },
+                "receiverPhone":{
+                    required: true,
+                    validatePhone: true,
+                },
+                "receiverAddress":{
+                    required: true
+                }
+            },
+            messages: {
+                "receiverName":{
+                    required: "Nhập vào họ tên người nhận"
+                },
+                "receiverPhone":{
+                    required: "Nhập số điện thoại"
+                },
+                "receiverAddress":{
+                    required: "Nhập địa chỉ"
+                }
+            },
+        })
+        $.validator.addMethod("validatePassword", function (value, element) {
+            return this.optional(element) || /^(?=.*[!@#$%^&*]).{8,}$/i.test(value);
+        }, "Hãy nhập password ít nhất 8 ký tự và ít nhất một kí tự đặc biệt");
+        $.validator.addMethod("validatePhone", function (value, element){
+            return this.optional(element) || /^(0\d{9})$/.test(value);
+        }, "Số điện thoại gồm 10 chữ số bắt đầu bằng 0");
+    })
+</script>
+</body>
+</html>

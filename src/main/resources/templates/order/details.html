@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div class="container col-6">
+  <h3>Chi tiết đơn hàng</h3>
+  <table class="table table-active">
+    <tr>
+      <th>Sản phẩm</th>
+      <th>Phân loại</th>
+      <th>Giá gốc</th>
+      <th>Giá khuyến mại</th>
+      <th>Số lượng</th>
+    </tr>
+    <tr th:each="item : ${items}">
+      <td>
+        <img th:src="${item.product.avatar}" style="width:75px;height:75px;">
+        <span th:text="${item.product.productName}"></span>
+      </td>
+      <td th:text="${item.product.category.getCategoryName()}"></td>
+      <td th:text="${item.product.price}"></td>
+      <td th:text="${item.product.discount}"></td>
+      <td>
+        <span th:text="${item.quantity}"></span>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="total">Tổng tiền: <span th:text="${order.get().getTotalPrice()}"></span></div>
+        <div>Thời gian đặt: <span th:text="${order.get().getOrderTime()}"></span></div>
+        <div>Họ và tên người nhận: <span th:text="${order.get().getReceiverName()}"></span></div>
+        <div>Địa chỉ nhận hàng: <span th:text="${order.get().getReceiverAddress()}"></span></div>
+        <div>Số điện thoại: <span th:text="${order.get().getReceiverPhone()}"></span></div>
+        <div>Ghi chú: <span th:text="${order.get().getNote()}"></span></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

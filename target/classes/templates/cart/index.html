@@ -55,6 +55,7 @@
     <tr>
       <td>
         <div class="total">Tổng tiền: <span th:text="${cart.getCartTotalPrice()}"></span></div>
+        <a class="btn btn-success" th:href="@{/order/preview}">Đặt hàng</a>
       </td>
     </tr>
   </table>

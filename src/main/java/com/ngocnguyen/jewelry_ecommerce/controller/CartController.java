@@ -40,7 +40,7 @@ public class CartController {
      * @throws Exception
      */
     @GetMapping("update")
-    public String updaate(@RequestParam("id") Long id, int quantity) throws Exception {
+    public String update(@RequestParam("id") Long id, int quantity) throws Exception {
         cartService.updateQuantity(id, quantity);
         return "redirect:/cart/index";
     }

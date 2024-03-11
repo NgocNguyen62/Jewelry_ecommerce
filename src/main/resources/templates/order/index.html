@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Đơn hàng đã đặt</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div class="col-3"></div>
+<div class="container col-6">
+    <h3>Đơn hàng đã đặt</h3>
+    <table class="table table-active">
+        <tr th:each="order : ${orders}">
+            <td>
+                <div>Thời gian đặt: <span th:text="${order.getOrderTime()}"></span></div>
+                <div>Giá trị đơn hàng: <span th:text="${order.getTotalPrice()}"></span></div>
+                <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>
+                <div><a th:href="@{/order/details?id={id}(id=${order.getId()})}">Chi tiết</a></div>
+            </td>
+            <td>
+                <a class="btn btn-success" th:href="@{/order/confirm?id={id}(id=${order.getId()})}">Đã nhận</a>
+                <a class="btn btn-danger" th:href="@{/order/cancel?id={id}(id=${order.getId()})}">Hủy đơn</a>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
