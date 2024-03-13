@@ -10,4 +10,10 @@ public interface CategoryService {
     void delete(Long id);
     List<Category> getAllCate();
     Optional<Category> findById(Long id);
+    int countProduct(Long id) throws Exception;
+    int[] arrCount() throws Exception;
+
+    String[] categoriesName();
+
+    double[] percentProduct() throws Exception;
 }

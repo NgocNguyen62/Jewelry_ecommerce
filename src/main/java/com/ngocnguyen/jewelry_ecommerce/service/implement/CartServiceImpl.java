@@ -123,7 +123,12 @@ public class CartServiceImpl implements CartService {
                     int newQuantity = cartItems.getQuantity() + quantity;
                     if(newQuantity > 0){
                         cartItems.setQuantity(newQuantity);
-                        return cartItemsRepository.save(cartItems);
+                        if(item.get().getProduct().getQuantity() > cartItems.getQuantity()){
+                            return cartItemsRepository.save(cartItems);
+                        } else {
+                            throw new Exception("Không đủ sản phẩm");
+                        }
+
                     } else {
                         deleteItem(id);
                     }

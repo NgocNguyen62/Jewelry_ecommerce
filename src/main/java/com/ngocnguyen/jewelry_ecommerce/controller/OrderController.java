@@ -65,7 +65,7 @@ public class OrderController {
         return "redirect:/order/index";
     }
     @GetMapping("cancel")
-    public String cancel(@RequestParam("id") Long id){
+    public String cancel(@RequestParam("id") Long id) throws Exception {
         orderService.cancelOrder(id);
         return "redirect:/order/index";
     }

@@ -16,14 +16,26 @@
       <div class="navbar-header">
         <a class="navbar-brand" href="#">Admin</a>
       </div>
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav navbar-left">
         <li class="active"><a th:href="@{/index}">Home</a></li>
-        <li><a th:href="@{/user/index}">Users</a></li>
+<!--        <li><a th:href="@{/user/index}">Users</a></li>-->
+<!--        <li><a th:unless="${#authorization.expression('isAuthenticated()')}" th:href="@{/login}">Login</a></li>-->
+<!--        <li><a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/logout}">Logout</a></li>-->
+<!--        <li><a th:if="${#authorization.expression('isAuthenticated()')}" th:text="${#authentication.name}"></a></li>-->
+<!--        <li><a th:href="@{/category/index}">Category</a></li>-->
+<!--        <li><a th:href="@{/product/index}">Products</a></li>-->
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+<!--        <li><a th:if="${#authorization.expression('isAuthenticated()')}" th:text="${#authentication.name}"></a></li>-->
+        <li class="dropdown" th:if="${#authorization.expression('isAuthenticated()')}">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${#authentication.name}"> <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Profile</a></li>
+            <li><a href="#" th:href="@{/logout}">Logout</a></li>
+          </ul>
+        </li>
         <li><a th:unless="${#authorization.expression('isAuthenticated()')}" th:href="@{/login}">Login</a></li>
-        <li><a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/logout}">Logout</a></li>
-        <li><a th:if="${#authorization.expression('isAuthenticated()')}" th:text="${#authentication.name}"></a></li>
-        <li><a th:href="@{/category/index}">Category</a></li>
-        <li><a th:href="@{/product/index}">Products</a></li>
+
       </ul>
     </div>
   </nav>

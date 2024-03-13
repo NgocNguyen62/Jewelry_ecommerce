@@ -11,4 +11,15 @@ public interface ProductService {
     Optional<Product> findById(Long id);
     void delete(Long id) throws Exception;
 
+    int countProducts();
+
+    void updateQuantity(Long id, int quantity) throws Exception;
+
+    void updateSales(Long id, int quantity) throws Exception;
+
+    int getAllSales();
+
+    int[] countInTopSales(int maxTop);
+
+    String[] nameOfTopSales(int maxTop);
 }
