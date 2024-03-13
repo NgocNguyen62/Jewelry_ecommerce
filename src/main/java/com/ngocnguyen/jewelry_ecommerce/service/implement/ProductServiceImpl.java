@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -103,5 +105,77 @@ public class ProductServiceImpl implements ProductService {
             throw new Exception(e);
         }
         productRepository.deleteById(id);
+    }
+    @Override
+    public int countProducts(){
+        return productRepository.findAll().size();
+    }
+    @Override
+    public void updateQuantity(Long id, int quantity) throws Exception {
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()){
+            product.get().setQuantity(product.get().getQuantity() + quantity);
+            productRepository.save(product.get());
+        } else {
+            throw new Exception("Sản phẩm không tồn tại");
+        }
+    }
+
+    @Override
+    public void updateSales(Long id, int quantity) throws Exception {
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()){
+            product.get().setSales(product.get().getSales() + quantity);
+            productRepository.save(product.get());
+        } else {
+            throw new Exception("Sản phẩm không tồn tại");
+        }
+    }
+
+    public int[] productSales(){
+        List<Product> products = findAll();
+        int[] count = new int[products.size()];
+        for(int i = 0; i < count.length; i++){
+            count[i] = products.get(i).getSales();
+        }
+        return count;
+    }
+    @Override
+    public int getAllSales(){
+        return Arrays.stream(productSales()).sum();
+    }
+
+    public List<Product> topSales(){
+        List<Product> products = findAll();
+        products.sort(Comparator.comparingInt(Product::getSales).reversed());
+        return products;
+    }
+
+    @Override
+    public int[] countInTopSales(int maxTop){
+        int size = maxTop;
+        List<Product> products = topSales();
+        if(size > products.size()){
+            size = products.size();
+        }
+        int[] top = new int[size];
+        for(int i = 0; i < top.length; i++){
+            top[i] = products.get(i).getSales();
+        }
+        return top;
+    }
+
+    @Override
+    public String[] nameOfTopSales(int maxTop){
+        int size = maxTop;
+        List<Product> products = topSales();
+        if(size > products.size()){
+            size = products.size();
+        }
+        String[] top = new String[size];
+        for(int i = 0; i < top.length; i++){
+            top[i] = products.get(i).getProductName();
+        }
+        return top;
     }
 }

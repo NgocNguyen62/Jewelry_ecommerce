@@ -5,12 +5,14 @@ import com.ngocnguyen.jewelry_ecommerce.dto.CartDTO;
 import com.ngocnguyen.jewelry_ecommerce.dto.CartItemDTO;
 import com.ngocnguyen.jewelry_ecommerce.entity.Order;
 import com.ngocnguyen.jewelry_ecommerce.entity.OrderItems;
+import com.ngocnguyen.jewelry_ecommerce.entity.Product;
 import com.ngocnguyen.jewelry_ecommerce.entity.User;
 import com.ngocnguyen.jewelry_ecommerce.repository.OrderItemRepository;
 import com.ngocnguyen.jewelry_ecommerce.repository.OrderRepository;
 import com.ngocnguyen.jewelry_ecommerce.repository.UserRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.CartService;
 import com.ngocnguyen.jewelry_ecommerce.service.OrderService;
+import com.ngocnguyen.jewelry_ecommerce.service.ProductService;
 import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,8 @@ public class OrderServiceImpl implements OrderService {
     private UserRepository userRepository;
     @Autowired
     private CartService cartService;
-
+    @Autowired
+    private ProductService productService;
 
     private User getCurrentUser() throws Exception {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -64,6 +67,10 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setQuantity(item.getQuantity());
             orderItem.setProductPrice(item.getProduct().getDiscount());
             orderItem.setOrder(newOrder);
+
+            Product product = item.getProduct();
+            productService.updateSales(product.getId(), item.getQuantity());
+            productService.updateQuantity(product.getId(), -item.getQuantity());
             orderItemRepository.save(orderItem);
         }
         cartService.deleteAll();
@@ -72,8 +79,14 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public void cancelOrder(Long id) {
+    public void cancelOrder(Long id) throws Exception {
         Optional<Order> order = orderRepository.findById(id);
+        List<OrderItems> items = orderItemRepository.findAllByOrder_id(id);
+        for(OrderItems item : items){
+            Product product = item.getProduct();
+            productService.updateQuantity(product.getId(), item.getQuantity());
+            productService.updateSales(product.getId(), -item.getQuantity());
+        }
         if(order.isPresent()){
             order.get().setStatus(CommonConstants.CANCEL_STATUS);
             orderRepository.save(order.get());

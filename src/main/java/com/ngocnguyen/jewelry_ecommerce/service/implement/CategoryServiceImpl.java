@@ -4,12 +4,14 @@ import com.ngocnguyen.jewelry_ecommerce.component.CustomUserDetails;
 import com.ngocnguyen.jewelry_ecommerce.entity.Category;
 import com.ngocnguyen.jewelry_ecommerce.repository.CategoryRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.CategoryService;
+import com.ngocnguyen.jewelry_ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +19,8 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private ProductService productService;
     @Override
     public Category saveCategory(Category cate) throws Exception {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -55,5 +59,45 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Optional<Category> findById(Long id) {
         return categoryRepository.findById(id);
+    }
+
+    @Override
+    public int countProduct(Long id) throws Exception {
+        Optional<Category> category = findById(id);
+        if(category.isPresent()){
+            return category.get().getProducts().size();
+        } else {
+            throw new Exception("Phân loại không tồn tại");
+        }
+
+    }
+
+    @Override
+    public int[] arrCount() throws Exception {
+        ArrayList<Integer> count = new ArrayList<>();
+        List<Category> categories = getAllCate();
+        for (Category cate : categories){
+            count.add(countProduct(cate.getId()));
+        }
+        int[] arr = count.stream().mapToInt(i -> i).toArray();
+        return arr;
+    }
+
+    @Override
+    public  String[] categoriesName(){
+        List<Category> categories = getAllCate();
+        return categories.stream()
+                .map(Category::getCategoryName)
+                .toArray(String[]::new);
+    }
+    @Override
+    public double[] percentProduct() throws Exception {
+        int allProducts = productService.countProducts();
+        int[] productInCate = arrCount();
+        double[] percent = new double[productInCate.length];
+        for(int i = 0; i < percent.length; i++){
+            percent[i] = (double) productInCate[i] / allProducts * 100;
+        }
+        return percent;
     }
 }

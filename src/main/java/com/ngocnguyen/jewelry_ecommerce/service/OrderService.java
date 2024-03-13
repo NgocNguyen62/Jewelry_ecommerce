@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface OrderService {
     Order createOrder(Order form) throws Exception;
-    void cancelOrder(Long id);
+    void cancelOrder(Long id) throws Exception;
     void confirmOrder(Long id);
     List<OrderItems> getItemsInOrder(Long id);
     List<Order> getAllOrders() throws Exception;
