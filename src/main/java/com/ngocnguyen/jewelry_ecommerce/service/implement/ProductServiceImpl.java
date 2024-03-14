@@ -150,6 +150,14 @@ public class ProductServiceImpl implements ProductService {
         products.sort(Comparator.comparingInt(Product::getSales).reversed());
         return products;
     }
+    @Override
+    public List<Product> topSaleProduct(int limit){
+        List<Product> products = topSales();
+        if(limit < products.size()){
+            return products.subList(0, limit);
+        }
+        return products;
+    }
 
     @Override
     public int[] countInTopSales(int maxTop){
@@ -177,5 +185,12 @@ public class ProductServiceImpl implements ProductService {
             top[i] = products.get(i).getProductName();
         }
         return top;
+    }
+    @Override
+    public List<Product> searchResult(String keyword){
+        if(keyword != null){
+            return productRepository.search(keyword);
+        }
+        return findAll();
     }
 }

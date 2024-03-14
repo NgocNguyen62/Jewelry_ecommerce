@@ -19,7 +19,11 @@ public interface ProductService {
 
     int getAllSales();
 
+    List<Product> topSaleProduct(int limit);
+
     int[] countInTopSales(int maxTop);
 
     String[] nameOfTopSales(int maxTop);
+
+    List<Product> searchResult(String keyword);
 }

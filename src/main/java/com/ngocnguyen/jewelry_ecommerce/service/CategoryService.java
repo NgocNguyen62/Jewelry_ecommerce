@@ -16,4 +16,8 @@ public interface CategoryService {
     String[] categoriesName();
 
     double[] percentProduct() throws Exception;
+
+    int categorySale(Long id);
+
+    List<Category> topCateSale(int limit);
 }
