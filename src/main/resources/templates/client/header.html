@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <div id="header" th:fragment="header"> <!-- header -->
+    <div class="top"> <!-- top -->
+      <div class="container">
+        <ul class="top-support">
+          <li><i class="fa fa-phone-square"></i><span>(+800) 123 456 7890</span></li>
+          <li><a href=""><i class="fa fa-envelope-square"></i><span>info@bootstrapmart.com</span></a></li>
+        </ul>
+        <div class="top-offers">
+          <div class="alert alert-warning alert-dismissible fade in offers" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i></span></button>
+            Free Shipping <a href="">on All Orders Over</a> $75!
+          </div>
+        </div>
+        <div class="top-control">
+          <a href="">Track Order</a>
+          <span>•</span>
+          <a href="">Register</a>
+          <span>•</span>
+          <a th:unless="${#authorization.expression('isAuthenticated()')}" th:href="@{/login}">Đăng nhập</a>
+          <div class="user" th:if="${#authorization.expression('isAuthenticated()')}">
+            <a class="width-user" th:text="${#authentication.name}"></a>
+            <ul class="sub-user">
+              <li>
+                <a class="dropdown-item" th:href="@{/order/history}">Đơn hàng của tôi</a>
+              </li>
+              <li>
+                <a class="dropdown-item" >Đổi mật khẩu</a>
+              </li>
+
+              <li>
+                <a href="#" th:href="@{/logout}">Logout</a>
+              </li>
+              <li th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <a class="dropdown-item" th:href="@{/dashboard}">Quản lý</a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+        <div class="clearfix"></div>
+        <div class="top-offers show-mobile">
+          <div class="alert alert-warning alert-dismissible fade in offers" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle"></i></span></button>
+            Free Shipping <a href="">on All Orders Over</a> $75!
+          </div>
+        </div>
+      </div>
+    </div> <!-- top -->
+
+    <div id="believe-nav"> <!-- Nav -->
+      <div class="container">
+        <div class="min-marg">
+          <nav class="navbar navbar-default">
+            <!-- <div class="container-fluid"> -->
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" th:href="@{/client/home}"><img height="40px" src="https://tnj.vn/img/cms/TNJ-xanh10.png" alt=""></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                <li class="active"><a th:href="@{/client/home}">Home <span class="sr-only">(current)</span></a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="blog-detail.html">Blog Post</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="#">Buy Pro Version</a></li>
+              </ul>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="menu-search-form">
+                  <a href="#" id="open-srch-form"><img src="/template/images/srch.png" alt="srch"></a>
+                </li>
+                <li>
+                  <a href="#"><img src="/template/images/pav.png" alt="pav">
+
+                  </a></li>
+                <li>
+                  <a th:href="@{/cart/index}"><img src="/template/images/bag.png" alt="bag">
+                    <div th:if="${#authorization.expression('isAuthenticated()')}" class="icon-cart-number">
+                      <span th:text="${countCart}"></span>
+                    </div>
+                  </a>
+                </li>
+                <li id="open-srch-form-mod">
+                  <div>
+                    <form class="side-search" th:action="@{/search}" method="get">
+                      <div class="input-group">
+                        <input class="form-control search-wid" type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm..." aria-describedby="basic-addon2">
+                        <!--                                                        <button class="input-group-addon btn-side-serach" type="submit"><i class="fa fa-search"></i></button>-->
+                      </div>
+                    </form>
+                  </div>
+                </li>
+              </ul>
+
+            </div><!-- /.navbar-collapse -->
+            <!--</div> -->
+
+          </nav>
+        </div>
+        <div class="srch-form">
+          <form class="side-search" th:action="@{/search}" method="get">
+            <div class="input-group">
+              <input class="form-control search-wid" type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm..." aria-describedby="basic-addon2">
+              <!--                                  <button class="input-group-addon btn-side-serach" type="submit"></button>-->
+            </div>
+          </form>
+        </div>
+      </div>
+    </div> <!-- Nav -->
+
+    <!--              <div id="cat-nav">-->
+    <!--                  <div class="container">-->
+    <!--                      <div class="wrap-cat">-->
+    <!--                          <a href="#" id="to-open-cat" class="btn btn-default btn-sm">show categories</a>-->
+    <!--                          <ul class="this-cat clearfix">-->
+    <!--                              <li class="active"><a href="">ELECTRONICS <i class="fa fa-angle-down"></i></a></li>-->
+    <!--                              <li><a href="">MEN <i class="fa fa-angle-down"></i></a></li>-->
+    <!--                              <li><a href="">WOMEN <i class="fa fa-angle-down"></i></a></li>-->
+    <!--                              <li><a href="">BABY & KIDS <i class="fa fa-angle-down"></i></a></li>-->
+    <!--                              <li><a href="">BOOKS & MEDIA <i class="fa fa-angle-down"></i></a></li>-->
+    <!--                              <li><a href="">HOME & KITCHEN <i class="fa fa-angle-down"></i></a></li>-->
+    <!--                              <li><a href="">MORE STORES <i class="fa fa-angle-down"></i></a></li>-->
+    <!--                              <li><a href="">OFFERS ZONE <i class="fa fa-angle-down"></i></a></li>-->
+    <!--                              <li class="cat-img-off"><img src="images/offers.png" alt="off"></li>-->
+    <!--                          </ul>-->
+    <!--                      </div>-->
+    <!--                  </div>-->
+    <!--              </div>-->
+
+    <div id="cat-nav">
+      <div class="container">
+        <nav class="navbar navbar-default">
+          <!-- <div class="container-fluid"> -->
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#cat-nav-mega">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="cat-nav-mega">
+            <ul class="nav navbar-nav" th:each="cate : ${cates}">
+              <li><a href="#" th:text="${cate.categoryName}"></a></li>
+              <!--                              <li class="cat-img-off"><img src="/template/images/offers.png" alt="off"></li>-->
+            </ul>
+
+          </div><!-- /.navbar-collapse -->
+          <!--</div> -->
+        </nav>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -192,5 +193,14 @@ public class ProductServiceImpl implements ProductService {
             return productRepository.search(keyword);
         }
         return findAll();
+    }
+
+    @Override
+    public List<Product> newestProduct(int limit){
+        List<Product> products = findAll();
+        List<Product> sortedProducts = products.stream()
+                .sorted(Comparator.comparing(Product::getUpdateAt, Comparator.nullsLast(Comparator.reverseOrder())))
+                .collect(Collectors.toList());
+        return sortedProducts.subList(0,Math.min(sortedProducts.size(),limit));
     }
 }

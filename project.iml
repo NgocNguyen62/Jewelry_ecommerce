@@ -155,5 +155,10 @@
     <orderEntry type="library" name="theme-284df215" level="application" />
     <orderEntry type="library" name="popper.js" level="application" />
     <orderEntry type="library" name="jquery-3.2.1.slim" level="application" />
+    <orderEntry type="library" name="star-rating" level="application" />
+    <orderEntry type="library" name="theme" level="application" />
+    <orderEntry type="library" name="jquery-3.5.1" level="application" />
+    <orderEntry type="library" name="LANG" level="application" />
+    <orderEntry type="library" name="theme-284df216" level="application" />
   </component>
 </module>

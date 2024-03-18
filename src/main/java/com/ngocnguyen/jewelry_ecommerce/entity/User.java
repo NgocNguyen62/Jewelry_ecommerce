@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -49,4 +50,7 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
     private Cart cart;
+
+    @OneToMany(mappedBy = "user")
+    private List<Rate> rates;
 }

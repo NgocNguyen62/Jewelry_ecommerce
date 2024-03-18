@@ -4,26 +4,82 @@
     <meta charset="UTF-8">
     <title>Sản phẩm</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/navbar.css"/>
-    <link rel="stylesheet" href="/css/homepage.css"/>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,500,600,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Playfair+Display:400,700' rel='stylesheet' type='text/css'>
+    <link href='/font-awesome/css/font-awesome.css' rel='stylesheet' type='text/css'>
+    <link href="/template/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/responsive.css" rel="stylesheet">
+    <link href="/template/css/owl.carousel.css" rel="stylesheet">
+    <link href="/template/css/owl.theme.css" rel="stylesheet">
+    <link href="/template/css/owl.transitions.css" rel="stylesheet">
+    <link href="/template/css/prettyPhoto.css" rel="stylesheet">
+
 </head>
 <body>
-    <div th:insert="/client/navbar :: header"></div>
-    <div class="card-columns">
-        <div th:each="product : ${products}" class="col-md-auto">
-            <div class="card">
-                <img width="150px" height="300px" loading="lazy" th:src="@{${product.avatar}}" class="card-img-top" alt="Product Image">
-                <div class="card-body text-center">
-                    <h5 class="card-title" th:text="${product.productName}"></h5>
-                    <!--                        <p class="card-text" th:text="${product.productDescription}"></p>-->
-                    <!--                        <a th:href="@{/product/details/{id}(id=${product.id})}" class="btn btn-primary">Details</a>-->
+    <div th:insert="/client/header :: header"></div>
+    <div class="rec-blog">
+        <div class="container">
+            <div class="rec-blog-inner">
+                <div class="blog-title">
+                    <span style="font-size: 25px">Sản phẩm</span>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-3 prdct-grid" th:each="product : ${products}">
+                            <div class="product-fade">
+                                <div class="product-fade-wrap">
+                                    <div class="product-image">
+                                        <div class="item"><img th:src="@{${product.avatar}}" alt="" class="img-responsive"></div>
+                                    </div>
+                                    <div class="product-fade-ct">
+                                        <div class="product-fade-control">
+                                            <div class="to-left">
+                                                <a href=""><i class="fa fa-heart"></i></a>
+                                                <a href=""><i class="fa fa-retweet"></i></a>
+                                                <a href=""><i class="fa fa-search"></i></a>
+                                            </div>
+                                            <!--                                                                <div class="to-right">-->
+                                            <!--                                                                    <div id="product-control" class="owl-carousel owl-theme clearfix">-->
+                                            <!--                                                                        <div class="item"><div class="bullets"></div></div>-->
+                                            <!--                                                                        <div class="item"><div class="bullets"></div></div>-->
+                                            <!--                                                                        <div class="item"><div class="bullets"></div></div>-->
+                                            <!--                                                                        <div class="item"><div class="bullets"></div></div>-->
+                                            <!--                                                                    </div>-->
+                                            <!--                                                                </div>-->
+                                            <div class="clearfix"></div>
+                                            <a th:href="@{/cart/add?id={id}(id=${product.id})}" class="btn btn-to-cart"><span class="bag"></span><span>Add To cart</span><div class="clearfix"></div></a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="product-name">
+                                <a href="" th:text="${product.productName}"></a>
+                            </div>
+                            <div class="star-rate" th:each="i : ${#numbers.sequence(1, 5)}">
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product-price">
+                                <span th:text="'$' + ${product.price}"></span> <div th:text="${product.discount}"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="/template/js/library.js"></script>
+    <script src="/template/js/bootstrap.min.js"></script>
+    <script src="/template/js/owl.carousel.min.js"></script>
+    <script src="/template/js/jquery.raty.js"></script>
+    <script src="/template/js/ui.js"></script>
+    <script src="/template/js/jquery.prettyPhoto.js"></script>
+    <script src="/template/js/jquery.selectbox-0.2.js"></script>
+    <script src="/template/js/theme-script.js"></script>
+
 </body>
 </html>

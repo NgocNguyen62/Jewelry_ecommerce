@@ -92,6 +92,27 @@ create table `order_items`(
     `quantity` int,
     foreign key (order_id) references `orders`(id),
     foreign key (product_id) references products(id)
+);
+
+drop table if exists `rate`;
+create table `rate`(
+    `id` bigint primary key auto_increment,
+    `user_id` bigint,
+    `product_id` bigint,
+    `stars` int,
+    `comment` varchar(255),
+    `time` DATETIME,
+    foreign key (user_id) references `user`(id),
+    foreign key (product_id) references `products`(id)
+);
+
+drop table if exists `favorite`;
+create table `favorite`(
+    `id` bigint primary key auto_increment,
+     `user_id` bigint,
+     `product_id` bigint,
+    foreign key (user_id) references `user`(id),
+    foreign key (product_id) references `products`(id)
 )
 
 

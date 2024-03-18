@@ -26,4 +26,6 @@ public interface ProductService {
     String[] nameOfTopSales(int maxTop);
 
     List<Product> searchResult(String keyword);
+
+    List<Product> newestProduct(int limit);
 }
