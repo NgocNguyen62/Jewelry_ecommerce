@@ -11,4 +11,10 @@ public interface UserService {
     User saveUser(User user) throws Exception;
     void deleteUser(Long id);
     Optional<User> findUserById(Long id);
+
+    User register(User user);
+
+    User updateAccount(User user);
+
+    User getCurrentUser();
 }

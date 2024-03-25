@@ -110,9 +110,15 @@ drop table if exists `favorite`;
 create table `favorite`(
     `id` bigint primary key auto_increment,
      `user_id` bigint,
-     `product_id` bigint,
-    foreign key (user_id) references `user`(id),
-    foreign key (product_id) references `products`(id)
+    foreign key (user_id) references `user`(id)
+);
+drop table if exists `favorite_items`;
+create table `favorite_items`(
+    `id` bigint primary key auto_increment,
+    `favorite_id` bigint,
+    `product_id` bigint,
+    foreign key (product_id) references `products`(id),
+    foreign key (favorite_id) references `favorite`(id)
 )
 
 

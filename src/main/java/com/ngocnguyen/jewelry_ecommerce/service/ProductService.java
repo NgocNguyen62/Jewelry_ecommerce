@@ -1,6 +1,8 @@
 package com.ngocnguyen.jewelry_ecommerce.service;
 
 import com.ngocnguyen.jewelry_ecommerce.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,4 +30,10 @@ public interface ProductService {
     List<Product> searchResult(String keyword);
 
     List<Product> newestProduct(int limit);
+
+    List<Product> getRelativeProduct(Long id) throws Exception;
+
+    Page<Product> getAllProducts(Pageable pageable);
+
+    Page<Product> getPageProducts(Pageable pageable, List<Product> products);
 }

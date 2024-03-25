@@ -6,6 +6,10 @@ import com.ngocnguyen.jewelry_ecommerce.repository.ProductRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.ProductService;
 import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -202,5 +207,45 @@ public class ProductServiceImpl implements ProductService {
                 .sorted(Comparator.comparing(Product::getUpdateAt, Comparator.nullsLast(Comparator.reverseOrder())))
                 .collect(Collectors.toList());
         return sortedProducts.subList(0,Math.min(sortedProducts.size(),limit));
+    }
+    @Override
+    public List<Product> getRelativeProduct(Long id) throws Exception {
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()){
+            return productRepository.findAllByCategory_IdAndIdNot(product.get().getCategory().getId(), id);
+        } else {
+            throw new Exception("Sản phẩm không tồn tại");
+        }
+    }
+    @Override
+    public Page<Product> getAllProducts(Pageable pageable){
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Product> list;
+        List<Product> products = findAll();
+        if(products.size() < startItem){
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, products.size());
+            list = products.subList(startItem, toIndex);
+        }
+        Page<Product> productPage = new PageImpl<Product>(list, PageRequest.of(currentPage, pageSize), products.size());
+        return productPage;
+    }
+    @Override
+    public Page<Product> getPageProducts(Pageable pageable, List<Product> products){
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Product> list;
+        if(products.size() < startItem){
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, products.size());
+            list = products.subList(startItem, toIndex);
+        }
+        Page<Product> productPage = new PageImpl<Product>(list, PageRequest.of(currentPage, pageSize), products.size());
+        return productPage;
     }
 }

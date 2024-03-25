@@ -5,6 +5,7 @@ import com.ngocnguyen.jewelry_ecommerce.entity.User;
 import com.ngocnguyen.jewelry_ecommerce.repository.UserRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,5 +61,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findUserById(Long id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public User register(User user){
+        user.setRole("USER");
+        user.setUserStatus(0);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+    @Override
+    public User updateAccount(User user){
+        user.setRole("USER");
+        user.setUserStatus(0);
+        return userRepository.save(user);
+    }
+    @Override
+    public User getCurrentUser() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+            CustomUserDetails currentUserDetail = (CustomUserDetails) authentication.getPrincipal();
+            User currentUser = userRepository.findById(currentUserDetail.getUserId()).get();
+            return currentUser;
+        } else {
+            return null;
+        }
     }
 }

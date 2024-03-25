@@ -3,13 +3,21 @@ package com.ngocnguyen.jewelry_ecommerce.controller;
 import com.ngocnguyen.jewelry_ecommerce.entity.Category;
 import com.ngocnguyen.jewelry_ecommerce.entity.Product;
 import com.ngocnguyen.jewelry_ecommerce.entity.Rate;
+import com.ngocnguyen.jewelry_ecommerce.entity.User;
 import com.ngocnguyen.jewelry_ecommerce.service.CartService;
 import com.ngocnguyen.jewelry_ecommerce.service.CategoryService;
+import com.ngocnguyen.jewelry_ecommerce.service.FavoriteService;
 import com.ngocnguyen.jewelry_ecommerce.service.ProductService;
 import com.ngocnguyen.jewelry_ecommerce.service.RateService;
+import com.ngocnguyen.jewelry_ecommerce.service.UserService;
+import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 public class HomeController {
@@ -34,6 +44,15 @@ public class HomeController {
     private CartService cartService;
     @Autowired
     private RateService rateService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private FavoriteService favoriteService;
+
+    @ModelAttribute("currentUrl")
+    public String getCurrentUrl(HttpServletRequest request) {
+        return request.getRequestURI();
+    }
 
     @ModelAttribute("countCart")
     public int countCart() throws Exception {
@@ -44,6 +63,10 @@ public class HomeController {
             return 0;
         }
     }
+    @ModelAttribute("countFavorite")
+    public int countFavorite(){
+        return favoriteService.count();
+    }
     @ModelAttribute("cates")
     public List<Category> cates(){
         return categoryService.getAllCate();
@@ -51,6 +74,29 @@ public class HomeController {
     @RequestMapping("/login")
     public String login(){
         return "login";
+    }
+    @RequestMapping("/register")
+    public String register(Model model){
+        model.addAttribute("user", new User());
+        model.addAttribute("editMode", false);
+        return "/client/register";
+    }
+    @RequestMapping("/myAccount")
+    public String myAccount(Model model){
+        User userEdit = userService.getCurrentUser();
+        model.addAttribute("editMode", true);
+        model.addAttribute("user", userEdit);
+        return "client/myAccount";
+    }
+    @PostMapping("/createAccount")
+    public String createAccount(@ModelAttribute("user") User user){
+        userService.register(user);
+        return "redirect:/home";
+    }
+    @PostMapping("/updateAccount")
+    public String updateAccount(@ModelAttribute("user") User user){
+        userService.updateAccount(user);
+        return "/client/myAccount";
     }
     @RequestMapping("/dashboard")
     public String dashboard(Model model) throws Exception {
@@ -65,10 +111,10 @@ public class HomeController {
     public String home(Model model) throws Exception {
 //        model.addAttribute("cates", categoryService.getAllCate());
         model.addAttribute("topSale", productService.topSaleProduct(10));
-        List<Category> topCateSale = categoryService.topCateSale(2);
+        List<Category> topCateSale = categoryService.topCateSale(CommonConstants.NUM_TOP_SALE);
         model.addAttribute("topCateSale", topCateSale);
-        model.addAttribute("newest", productService.newestProduct(6));
-        return "/client/index";
+        model.addAttribute("newest", productService.newestProduct(CommonConstants.NUM_NEWEST_PRODUCTS));
+        return "/client/index2";
     }
     @RequestMapping("/search")
     public String search(Model model, @Param("keyword") String keyword) throws Exception {
@@ -77,8 +123,25 @@ public class HomeController {
         return "/client/product";
     }
     @RequestMapping("/products")
-    public String allProduct(Model model){
-        model.addAttribute("products", productService.findAll());
+//    public String allProduct(Model model){
+//        model.addAttribute("products", productService.findAll());
+//        return "/client/product";
+//    }
+    public String listProducts(Model model,
+                               @RequestParam("page") Optional<Integer> page,
+                               @RequestParam("size") Optional<Integer> size
+                               ){
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(CommonConstants.SIZE_OF_PAGE);
+        Page<Product> productPage = productService.getAllProducts(PageRequest.of(currentPage - 1, pageSize));
+        model.addAttribute("productPage", productPage);
+        int totalPages = productPage.getTotalPages();
+        if(totalPages > 0){
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
         return "/client/product";
     }
 
@@ -89,7 +152,10 @@ public class HomeController {
             model.addAttribute("product", product.get());
             model.addAttribute("averageStar", rateService.getAverageRate(id));
             model.addAttribute("images", product.get().getImages().split(","));
-            model.addAttribute("rates", rateService.getAllRate());
+            model.addAttribute("rates", rateService.getAllRateByProduct(id));
+            model.addAttribute("countRate", rateService.countRate(id));
+            model.addAttribute("relatives", productService.getRelativeProduct(id));
+            model.addAttribute("isFavorite", favoriteService.isInFavorite(id));
         } else {
             model.addAttribute("product", null);
         }
@@ -101,7 +167,7 @@ public class HomeController {
             rate.setProduct(product.get());
             model.addAttribute("form", rate);
         }
-        return "/client/product-details";
+        return "/client/detail";
     }
     @PostMapping("/rate")
     public String rate(@ModelAttribute("form") Rate form){
