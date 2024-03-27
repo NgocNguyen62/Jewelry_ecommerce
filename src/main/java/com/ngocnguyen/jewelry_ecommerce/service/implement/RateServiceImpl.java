@@ -39,17 +39,6 @@ public class RateServiceImpl implements RateService {
     }
     @Override
     public Rate saveRate(Rate form){
-//        Rate rate = getRate(productId);
-//        if(rate != null){
-//            rate.setRateTime(LocalDateTime.now());
-//            rate.setProduct(form.getProduct());
-//            rate.setUser(getCurrentUser());
-//            rate.setStars(form.getStars());
-//            rate.setComment(form.getComment());
-//            return rateRepository.save(rate);
-//        } else {
-//            throw new Exception("Cần đăng nhập để đánh giá");
-//        }
         form.setRateTime(LocalDateTime.now());
         form.setUser(getCurrentUser());
         return rateRepository.save(form);
@@ -100,6 +89,10 @@ public class RateServiceImpl implements RateService {
     public int countRate(Long productId){
         List<Rate> rates = rateRepository.findAllByProduct_Id(productId);
         return rates.size();
+    }
+    @Override
+    public List<Rate> getAllRateByProduct(Long id){
+        return rateRepository.findAllByProduct_Id(id);
     }
 
 }

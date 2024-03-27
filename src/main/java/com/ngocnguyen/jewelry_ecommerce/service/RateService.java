@@ -22,4 +22,6 @@ public interface RateService {
     double getAverageRate(Long productId);
 
     int countRate(Long productId);
+
+    List<Rate> getAllRateByProduct(Long id);
 }

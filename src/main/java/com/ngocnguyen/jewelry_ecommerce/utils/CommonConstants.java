@@ -9,4 +9,9 @@ public final class CommonConstants {
 
     public static final String WAIT_STATUS = "Chờ xác nhận";
     public static final double SHIPPING = 300;
-}
+    public static final int SIZE_OF_PAGE = 2;
+    public static final int NUM_TOP_SALE = 4;
+    public static final int NUM_NEWEST_PRODUCTS = 4;
+    public static final int UNLOCK_STATUS = 0;
+    public static final int LOCK_STATUS = 1;
+ }

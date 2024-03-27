@@ -48,9 +48,12 @@ public class User {
     @Column(name = "update_by")
     private Long updateBy;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Rate> rates;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Favorite favorite;
 }

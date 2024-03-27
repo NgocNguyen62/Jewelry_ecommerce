@@ -2,6 +2,8 @@ package com.ngocnguyen.jewelry_ecommerce.controller;
 
 import com.ngocnguyen.jewelry_ecommerce.entity.User;
 import com.ngocnguyen.jewelry_ecommerce.service.UserService;
+import com.ngocnguyen.jewelry_ecommerce.utils.UserExport;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,5 +68,19 @@ public class UserController {
             throw new Exception(e);
         }
         return "redirect:/user/index";
+    }
+    @GetMapping("export")
+    public void export(HttpServletResponse response) throws IOException{
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=user" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List <User> listOfUsers = userService.getAllUser();
+        UserExport generator = new UserExport(listOfUsers);
+        generator.generateExcelFile(response);
     }
 }

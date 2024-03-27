@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="/font/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="/css/register.css">
+    <style>
+        label.error{
+            color: red;
+            display: block;
+            position: relative;
+            top: 5px;
+        }
+    </style>
+</head>
+<body>
+<div th:insert="/client/registerForm :: registerForm"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<script src="/js/form.js"></script>
+</body>
+</html>
