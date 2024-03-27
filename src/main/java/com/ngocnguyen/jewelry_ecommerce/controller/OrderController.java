@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Controller
 @RequestMapping("order")
@@ -30,7 +31,7 @@ public class OrderController {
             model.addAttribute("items", cartService.getAllCartItems());
             return "/order/form";
         } catch (Exception ex) {
-            String encodeMessage = URLEncoder.encode(ex.getMessage(), "UTF-8");
+            String encodeMessage = URLEncoder.encode(ex.getMessage(), StandardCharsets.UTF_8);
             return "redirect:error?message=" + encodeMessage;
         }
     }

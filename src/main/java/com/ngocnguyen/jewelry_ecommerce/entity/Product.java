@@ -52,8 +52,8 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-//    @ManyToMany(mappedBy = "products", cascade = CascadeType.ALL)
-//    private List<CartItems> cartItems;
+    @OneToMany(mappedBy = "product")
+    private List<Rate> rates;
 
     @Transient
     private MultipartFile file;

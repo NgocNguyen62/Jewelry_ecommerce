@@ -17,7 +17,7 @@ public class CartController {
     public String index(Model model) throws Exception {
         model.addAttribute("items", cartService.getAllCartItems());
         model.addAttribute("cart", cartService.getCart());
-        return "/cart/index";
+        return "/cart/cart";
     }
 
     /**

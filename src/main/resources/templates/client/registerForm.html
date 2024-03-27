@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up</title>
+
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="/font/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="/css/register.css">
+    <style>
+        label.error{
+            color: red;
+            display: block;
+            position: relative;
+            top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main" th:fragment="registerForm">
+
+        <section class="signup">
+            <!-- <img src="images/signup-bg.jpg" alt=""> -->
+            <div class="container">
+                <div class="signup-content">
+                    <form method="POST" id="user-form" class="signup-form" th:object="${user}" th:action="@{/createAccount}">
+                        <input type="hidden" th:if="${editMode}" th:field="*{id}">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label th:text="'Họ'" th:for="first_name"></label>
+                                <input type="text" th:field="*{firstName}" class="form-control">                            </div>
+                            <div class="form-group">
+                                <label th:text="'Tên'" th:for="last_name"></label>
+                                <input type="text" th:field="*{lastName}" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group form-icon">
+                                <label th:text="'Ngày sinh'" th:for="birthday"></label>
+                                <input type="date" class="form-input" th:field="*{birthday}" placeholder="MM-DD-YYYY" />
+                            </div>
+                            <div class="form-radio">
+                                <label for="gender">Giới tính:</label>
+                                <div class="form-flex">
+                                    <input type="radio" th:field="*{gender}" value="nam" id="male" checked="checked" />
+                                    <label for="male">Nam</label>
+
+                                    <input type="radio" th:field="*{gender}" value="nữ" id="female" />
+                                    <label for="female">Nữ</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label th:text="'Số điện thoại'" th:for="phone"></label>
+                            <input type="text" th:field="*{phone}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label th:text="Email" th:for="email"></label>
+                            <input type="text" th:field = "*{email}" class="form-control">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label th:text="'Mật khẩu'" th:for="password"></label>
+                                <input type="password" th:field="*{password}" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label th:text="'Nhập lại mật khẩu'" th:for="re-password"></label>
+                                <input type="password" class="form-control" name="re-password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label th:text="'Địa chỉ'" th:for="address"></label>
+                            <input type="text" th:field="*{address}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="submit" id="submit" class="form-submit" value="Tạo tài khoản"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+    <script src="/js/form.js"></script>
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

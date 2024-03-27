@@ -2,6 +2,7 @@ package com.ngocnguyen.jewelry_ecommerce.service.implement;
 
 import com.ngocnguyen.jewelry_ecommerce.component.CustomUserDetails;
 import com.ngocnguyen.jewelry_ecommerce.entity.Category;
+import com.ngocnguyen.jewelry_ecommerce.entity.Product;
 import com.ngocnguyen.jewelry_ecommerce.repository.CategoryRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.CategoryService;
 import com.ngocnguyen.jewelry_ecommerce.service.ProductService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,5 +101,24 @@ public class CategoryServiceImpl implements CategoryService {
             percent[i] = (double) productInCate[i] / allProducts * 100;
         }
         return percent;
+    }
+    @Override
+    public int categorySale(Long id){
+        Optional<Category> category = categoryRepository.findById(id);
+        int sum = 0;
+        if(category.isPresent()){
+            List<Product> products = category.get().getProducts();
+            for(Product item : products){
+                sum += item.getSales();
+            }
+        }
+        category.orElseThrow();
+        return sum;
+    }
+    @Override
+    public List<Category> topCateSale(int limit){
+        List<Category> categories = getAllCate();
+        categories.sort(Comparator.comparingInt((Category category) -> categorySale(category.getId())).reversed());
+        return categories.subList(0, Math.min(categories.size(), limit));
     }
 }
