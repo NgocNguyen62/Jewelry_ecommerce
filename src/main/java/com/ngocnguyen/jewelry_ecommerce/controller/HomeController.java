@@ -109,7 +109,6 @@ public class HomeController {
     }
     @RequestMapping("/home")
     public String home(Model model) throws Exception {
-//        model.addAttribute("cates", categoryService.getAllCate());
         model.addAttribute("topSale", productService.topSaleProduct(10));
         List<Category> topCateSale = categoryService.topCateSale(CommonConstants.NUM_TOP_SALE);
         model.addAttribute("topCateSale", topCateSale);
@@ -123,10 +122,6 @@ public class HomeController {
         return "/client/product";
     }
     @RequestMapping("/products")
-//    public String allProduct(Model model){
-//        model.addAttribute("products", productService.findAll());
-//        return "/client/product";
-//    }
     public String listProducts(Model model,
                                @RequestParam("page") Optional<Integer> page,
                                @RequestParam("size") Optional<Integer> size
@@ -172,7 +167,6 @@ public class HomeController {
     @PostMapping("/rate")
     public String rate(@ModelAttribute("form") Rate form){
         rateService.saveRate(form);
-//        String referrer = request.getHeader("referer");
         return "redirect:/details?id=" + form.getProduct().getId();
     }
 }

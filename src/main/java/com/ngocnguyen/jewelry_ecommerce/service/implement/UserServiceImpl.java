@@ -4,6 +4,7 @@ import com.ngocnguyen.jewelry_ecommerce.component.CustomUserDetails;
 import com.ngocnguyen.jewelry_ecommerce.entity.User;
 import com.ngocnguyen.jewelry_ecommerce.repository.UserRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.UserService;
+import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -66,14 +67,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(User user){
         user.setRole("USER");
-        user.setUserStatus(0);
+        user.setUserStatus(CommonConstants.UNLOCK_STATUS);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
     @Override
     public User updateAccount(User user){
         user.setRole("USER");
-        user.setUserStatus(0);
+        user.setUserStatus(CommonConstants.UNLOCK_STATUS);
         return userRepository.save(user);
     }
     @Override
