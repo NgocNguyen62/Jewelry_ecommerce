@@ -19,8 +19,12 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     private UserRepository userRepository;
     @Override
     public User getUser(String token) {
-        PasswordResetToken passwordResetToken = repository.findByToken(token);
-        return passwordResetToken.getUser();
+        Optional<PasswordResetToken> passwordResetToken = repository.findByToken(token);
+        if(passwordResetToken.isPresent()){
+            return passwordResetToken.get().getUser();
+        }
+        passwordResetToken.orElseThrow();
+        return null;
     }
     @Override
     public void createToken(String email, String token){

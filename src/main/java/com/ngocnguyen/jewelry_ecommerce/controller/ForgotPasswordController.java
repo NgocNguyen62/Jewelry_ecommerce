@@ -58,7 +58,7 @@ public class ForgotPasswordController {
         helper.setFrom("ngoc622512@gmail.com", "Jewelry Shop");
         helper.setTo(recipientEmail);
 
-        String subject = "Here's the link to reset your password";
+        String subject = "Link đặt lại mật khẩu.";
 
         String content = "<p>Hello,</p>"
                 + "<p>Bạn đã yêu cầu đặt lại mật khẩu.</p>"

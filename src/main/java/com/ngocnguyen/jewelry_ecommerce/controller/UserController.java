@@ -5,6 +5,7 @@ import com.ngocnguyen.jewelry_ecommerce.service.UserService;
 import com.ngocnguyen.jewelry_ecommerce.utils.UserExport;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,6 +86,7 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
+    @PreAuthorize("isAuthenticated()")
     public String changePass(@RequestParam("password") String newPass, @RequestParam("oldPass") String oldPass, Model model){
         User currentUser = userService.getCurrentUser();
         if(userService.checkPassword(oldPass, currentUser.getPassword())){
