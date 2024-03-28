@@ -5,6 +5,7 @@ import com.ngocnguyen.jewelry_ecommerce.service.UserService;
 import com.ngocnguyen.jewelry_ecommerce.utils.UserExport;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,5 +83,18 @@ public class UserController {
         List <User> listOfUsers = userService.getAllUser();
         UserExport generator = new UserExport(listOfUsers);
         generator.generateExcelFile(response);
+    }
+
+    @PostMapping("/changePassword")
+    @PreAuthorize("isAuthenticated()")
+    public String changePass(@RequestParam("password") String newPass, @RequestParam("oldPass") String oldPass, Model model){
+        User currentUser = userService.getCurrentUser();
+        if(userService.checkPassword(oldPass, currentUser.getPassword())){
+            userService.updatePassword(currentUser, newPass);
+            return "redirect:/login";
+        } else {
+            model.addAttribute("error", "Mật khẩu cũ không đúng.");
+            return "redirect:/changePassForm?error";        }
+
     }
 }

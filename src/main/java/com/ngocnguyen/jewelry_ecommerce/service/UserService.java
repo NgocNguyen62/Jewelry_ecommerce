@@ -17,4 +17,8 @@ public interface UserService {
     User updateAccount(User user);
 
     User getCurrentUser();
+
+    boolean checkPassword(String oldPass, String pass);
+
+    void updatePassword(User user, String newPass);
 }
