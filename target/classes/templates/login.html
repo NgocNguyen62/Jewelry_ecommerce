@@ -23,6 +23,11 @@
       <div th:if="${param.logout}">
         <div class="alert alert-success"> You have been logged out.</div>
       </div>
+      <div th:if="${param.passwordResetSuccess}">
+        <div class="alert alert-success">
+          Your password has been reset successfully. Please login with your new password.
+        </div>
+      </div>
 
       <div class="card">
         <div class="card-header">
@@ -58,9 +63,10 @@
             </div>
             <div class="form-group mb-3">
               <button type="submit" class="btn btn-primary" >Submit</button>
+              <a th:href="@{/forgot_password}">Quên mật khẩu?</a>
               <span> Not registered ?
-<!--                                <a th:href="@{/user/add}">Register/Signup here</a>-->
-                            </span>
+                <a th:href="@{/register}">Đăng ký</a>
+              </span>
             </div>
           </form>
         </div>

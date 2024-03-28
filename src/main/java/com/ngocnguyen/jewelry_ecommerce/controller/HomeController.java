@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -86,7 +87,7 @@ public class HomeController {
         User userEdit = userService.getCurrentUser();
         model.addAttribute("editMode", true);
         model.addAttribute("user", userEdit);
-        return "client/myAccount";
+        return "redirect:/client/myAccount";
     }
     @PostMapping("/createAccount")
     public String createAccount(@ModelAttribute("user") User user){
@@ -96,7 +97,7 @@ public class HomeController {
     @PostMapping("/updateAccount")
     public String updateAccount(@ModelAttribute("user") User user){
         userService.updateAccount(user);
-        return "/client/myAccount";
+        return "redirect:/client/myAccount";
     }
     @RequestMapping("/dashboard")
     public String dashboard(Model model) throws Exception {
@@ -168,5 +169,9 @@ public class HomeController {
     public String rate(@ModelAttribute("form") Rate form){
         rateService.saveRate(form);
         return "redirect:/details?id=" + form.getProduct().getId();
+    }
+    @GetMapping("/changePassForm")
+    public String changePassForm(){
+        return "/client/change-password";
     }
 }

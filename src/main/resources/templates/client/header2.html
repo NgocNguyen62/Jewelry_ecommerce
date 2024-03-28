@@ -106,9 +106,9 @@
               <a class="nav-item nav-link" th:unless="${#authorization.expression('isAuthenticated()')}" th:href="@{/login}">Đăng nhập</a>
               <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" th:if="${#authorization.expression('isAuthenticated()')}" th:text="${#authentication.name}"></a>
               <div class="dropdown-menu">
-                <a href="cart.html" class="dropdown-item">Đơn hàng</a>
+                <a th:href="@{/order/index}" class="dropdown-item">Đơn hàng</a>
                 <a th:href="@{/myAccount}" class="dropdown-item">Thông tin tài khoản</a>
-                <a class="dropdown-item">Đổi mật khẩu</a>
+                <a th:href="@{/changePassForm}" class="dropdown-item">Đổi mật khẩu</a>
                 <a th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}" class="dropdown-item" th:href="@{/dashboard}">Quản lý</a>
                 <a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a>
               </div>

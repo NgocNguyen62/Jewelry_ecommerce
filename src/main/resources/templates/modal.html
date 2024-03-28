@@ -13,7 +13,7 @@
           Đã thêm vào giỏ hàng
         </div>
         <div class="modal-footer">
-          <a type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</a>
+          <a type="button" class="btn btn-secondary" th:href="@{/cart/add?id={id}(id=${product.id})}">Đóng</a>
         </div>
       </div>
     </div>

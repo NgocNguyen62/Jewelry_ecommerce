@@ -11,6 +11,7 @@ import com.ngocnguyen.jewelry_ecommerce.repository.CartRepository;
 import com.ngocnguyen.jewelry_ecommerce.repository.ProductRepository;
 import com.ngocnguyen.jewelry_ecommerce.repository.UserRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.CartService;
+import com.ngocnguyen.jewelry_ecommerce.service.UserService;
 import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;

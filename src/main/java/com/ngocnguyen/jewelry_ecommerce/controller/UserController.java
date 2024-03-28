@@ -83,4 +83,16 @@ public class UserController {
         UserExport generator = new UserExport(listOfUsers);
         generator.generateExcelFile(response);
     }
+
+    @PostMapping("/changePassword")
+    public String changePass(@RequestParam("password") String newPass, @RequestParam("oldPass") String oldPass, Model model){
+        User currentUser = userService.getCurrentUser();
+        if(userService.checkPassword(oldPass, currentUser.getPassword())){
+            userService.updatePassword(currentUser, newPass);
+            return "redirect:/login";
+        } else {
+            model.addAttribute("error", "Mật khẩu cũ không đúng.");
+            return "redirect:/changePassForm?error";        }
+
+    }
 }

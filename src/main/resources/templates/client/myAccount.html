@@ -59,6 +59,12 @@
         .form-submit:hover {
             background-color: #0056b3; /* Màu nền khi hover */
         }
+        label.error{
+            color: red;
+            display: block;
+            position: relative;
+            top: 5px;
+        }
 
     </style>
 </head>
@@ -83,7 +89,7 @@
             <input type="date" class="form-input" th:field="*{birthday}" placeholder="MM-DD-YYYY" />
         </div>
         <div class="form-radio">
-            <label for="gender">Giới tính:</label>
+            <label th:for="gender">Giới tính:</label>
             <div class="form-flex">
                 <input type="radio" th:field="*{gender}" value="nam" id="male" checked="checked" />
                 <label for="male">Nam</label>
