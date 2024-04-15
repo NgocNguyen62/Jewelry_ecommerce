@@ -6,11 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sign Up</title>
 
-    <!-- Font Icon -->
-    <link rel="stylesheet" href="/font/material-icon/css/material-design-iconic-font.min.css">
-
-    <!-- Main css -->
-    <link rel="stylesheet" href="/css/register.css">
     <style>
         label.error{
             color: red;
@@ -42,7 +37,7 @@
                         <div class="form-row">
                             <div class="form-group form-icon">
                                 <label th:text="'Ngày sinh'" th:for="birthday"></label>
-                                <input type="date" class="form-input" th:field="*{birthday}" placeholder="MM-DD-YYYY" />
+                                <input type="date" class="form-input" th:field="*{birthday}" placeholder="MM-DD-YYYY" th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" />
                             </div>
                             <div class="form-radio">
                                 <label for="gender">Giới tính:</label>

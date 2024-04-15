@@ -7,7 +7,10 @@ import com.ngocnguyen.jewelry_ecommerce.service.CategoryService;
 import com.ngocnguyen.jewelry_ecommerce.service.FavoriteService;
 import com.ngocnguyen.jewelry_ecommerce.service.OrderService;
 import com.ngocnguyen.jewelry_ecommerce.service.UserService;
+import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
+@PreAuthorize("isAuthenticated()")
 @RequestMapping("order")
 public class OrderController {
     @Autowired
@@ -44,6 +48,10 @@ public class OrderController {
         } else {
             return 0;
         }
+    }
+    @ModelAttribute("shipping")
+    public double shipping(){
+        return CommonConstants.SHIPPING;
     }
     @ModelAttribute("countFavorite")
     public int countFavorite(){
@@ -75,7 +83,9 @@ public class OrderController {
 
     @GetMapping("index")
     public String index(Model model) throws Exception {
-        model.addAttribute("orders", orderService.getDeliveringOrder());
+        model.addAttribute("deliverOrders", orderService.getDeliveringOrder());
+        model.addAttribute("waitOrders", orderService.getWaitingOrder());
+        model.addAttribute("history", orderService.history());
         return "/order/index";
     }
 
@@ -89,6 +99,8 @@ public class OrderController {
     public String details(@RequestParam("id") Long id, Model model){
         model.addAttribute("items", orderService.getItemsInOrder(id));
         model.addAttribute("order", orderService.getOrder(id));
+        model.addAttribute("shipping", CommonConstants.SHIPPING);
+        model.addAttribute("total", orderService.getOrder(id).get().getTotalPrice() + CommonConstants.SHIPPING);
         return "/order/details";
     }
     @GetMapping("confirm")
@@ -100,5 +112,23 @@ public class OrderController {
     public String cancel(@RequestParam("id") Long id) throws Exception {
         orderService.cancelOrder(id);
         return "redirect:/order/index";
+    }
+    @PostMapping("requestCancel")
+    public String requestCancel(@RequestParam("id") Long id, @RequestParam("reason") String reason){
+        orderService.requestCancel(id, reason);
+        return "redirect:/order/index";
+    }
+
+    @GetMapping("/confirmRequest")
+    public String confirmOrder(@RequestParam("id") Long id){
+        orderService.confirmOrderRequest(id);
+        return "redirect:/order/manager";
+    }
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/manager")
+    public String manager(Model model){
+        model.addAttribute("confirmRequest", orderService.getWaitConfirm());
+        model.addAttribute("cancelRequest", orderService.getCancelRequest());
+        return "/order/manager";
     }
 }

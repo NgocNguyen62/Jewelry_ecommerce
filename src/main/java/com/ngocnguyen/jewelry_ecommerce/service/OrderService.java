@@ -2,7 +2,6 @@ package com.ngocnguyen.jewelry_ecommerce.service;
 
 import com.ngocnguyen.jewelry_ecommerce.entity.Order;
 import com.ngocnguyen.jewelry_ecommerce.entity.OrderItems;
-import com.ngocnguyen.jewelry_ecommerce.entity.Product;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +16,20 @@ public interface OrderService {
     Order preview() throws Exception;
 
     List<Order> getDeliveringOrder() throws Exception;
+
+    List<Order> getWaitingOrder() throws Exception;
+
     List<Order> getSuccessOrder();
     List<Order> getCancelOrder();
     List<Order> history() throws Exception;
+
+    Order save(Order order);
+
+    void requestCancel(Long id, String reason);
+
+    void confirmOrderRequest(Long id);
+
+    List<Order> getWaitConfirm();
+
+    List<Order> getCancelRequest();
 }

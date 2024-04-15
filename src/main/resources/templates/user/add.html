@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Tạo tài khoản</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
@@ -24,11 +26,15 @@
     </style>
 </head>
 <body>
-<div class="container col-6">
-    <h3>Tạo tài khoản</h3>
-</div>
+<div th:insert="/sidebar :: sidebar"></div>
+<div class="content">
+    <div th:insert="/navbar :: navbar"></div>
+    <div class="container col-6">
+        <h3>Tạo tài khoản</h3>
+    </div>
     <div class="col-md-auto">
         <div th:insert="/user/form"></div>
     </div>
+</div>
 </body>
 </html>

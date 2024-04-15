@@ -7,11 +7,12 @@ import com.ngocnguyen.jewelry_ecommerce.entity.User;
 import com.ngocnguyen.jewelry_ecommerce.repository.CartRepository;
 import com.ngocnguyen.jewelry_ecommerce.repository.FavoriteRepository;
 import com.ngocnguyen.jewelry_ecommerce.repository.UserRepository;
-import com.ngocnguyen.jewelry_ecommerce.service.CartService;
-import com.ngocnguyen.jewelry_ecommerce.service.FavoriteService;
+import com.ngocnguyen.jewelry_ecommerce.repository.UserTableRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.UserService;
 import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +29,8 @@ public class UserServiceImpl implements UserService {
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private CartRepository cartRepository;
     @Autowired private FavoriteRepository favoriteRepository;
+    @Autowired
+    private UserTableRepository userTableRepository;
     @Override
     public List<User> getAllUser() {
         return userRepository.findAll();
@@ -124,5 +127,9 @@ public class UserServiceImpl implements UserService {
     public void updatePassword(User user, String newPass){
         user.setPassword(passwordEncoder.encode(newPass));
         userRepository.save(user);
+    }
+    @Override
+    public DataTablesOutput<User> getAllUser(DataTablesInput input){
+        return userTableRepository.findAll(input);
     }
 }

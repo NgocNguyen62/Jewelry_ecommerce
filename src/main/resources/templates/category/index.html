@@ -25,12 +25,13 @@
         <tr>
             <th>Tên phân loại</th>
             <th>Trạng thái</th>
+            <th>Số lượng sản phẩm</th>
         </tr>
         <tr th:each="cate : ${cates}">
             <td th:text="${cate.categoryName}"></td>
             <td th:if="${cate.categoryStatus} == 0" th:text="'Không khóa'"></td>
             <td th:if="${cate.categoryStatus} == 1" th:text="'Khóa'"></td>
-
+            <td th:text="${cate.products.size()}"></td>
             <td>
                 <a th:href="@{/category/edit?id={id}(id=${cate.id})}" class="btn btn-primary">Sửa</a>
                 <a data-toggle="modal" th:data-target="'#deleteModal-' + ${cate.id}" class="btn btn-danger">Xóa</a>

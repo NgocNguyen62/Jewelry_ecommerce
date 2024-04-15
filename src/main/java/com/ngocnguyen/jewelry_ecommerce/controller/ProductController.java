@@ -4,9 +4,11 @@ import com.ngocnguyen.jewelry_ecommerce.entity.Category;
 import com.ngocnguyen.jewelry_ecommerce.entity.Product;
 import com.ngocnguyen.jewelry_ecommerce.service.CategoryService;
 import com.ngocnguyen.jewelry_ecommerce.service.ProductService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +16,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("product")
@@ -36,14 +41,35 @@ public class ProductController {
     public List<String> allGender(){
         return Arrays.asList("Nam", "Nữ", "Cho bé", "Cặp đôi");
     }
+
+//    @Autowired
+//    private ProductTableRepository productTableRepository;
+//    @GetMapping("index")
+//    public String listProducts(Model model,
+//                               @RequestParam("page") Optional<Integer> page,
+//                               @RequestParam("size") Optional<Integer> size
+//    ){
+//        int currentPage = page.orElse(1);
+//        int pageSize = size.orElse(CommonConstants.SIZE_OF_PAGE_INDEX);
+//        Page<Product> productPage = productService.getAllProducts(PageRequest.of(currentPage - 1, pageSize));
+//        model.addAttribute("productPage", productPage);
+//        int totalPages = productPage.getTotalPages();
+//        if(totalPages > 0){
+//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+//                    .boxed()
+//                    .collect(Collectors.toList());
+//            model.addAttribute("pageNumbers", pageNumbers);
+//        }
+//        return "/product/index";
+//    }
+
     @GetMapping("index")
-    public String index(Model model){
-        model.addAttribute("products", productService.findAll());
-        return "/product/index";
+    public String getAllProduct(){
+        return "/product/product";
     }
 
-
     @GetMapping("add")
+    @PreAuthorize("isAuthenticated()")
     public String addProduct(Model model){
         model.addAttribute("editMode", true);
         Product product = new Product();
@@ -67,6 +93,7 @@ public class ProductController {
     }
 
     @GetMapping("edit")
+    @PreAuthorize("isAuthenticated()")
     public String edit(@RequestParam("id") Long id, Model model){
         Optional<Product> productEdit = productService.findById(id);
         model.addAttribute("editMode", true);

@@ -1,6 +1,8 @@
 package com.ngocnguyen.jewelry_ecommerce.service;
 
 import com.ngocnguyen.jewelry_ecommerce.entity.User;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,4 +23,6 @@ public interface UserService {
     boolean checkPassword(String oldPass, String pass);
 
     void updatePassword(User user, String newPass);
+
+    DataTablesOutput<User> getAllUser(DataTablesInput input);
 }

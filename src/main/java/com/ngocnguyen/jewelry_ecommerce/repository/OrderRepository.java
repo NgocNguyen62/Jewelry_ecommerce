@@ -11,4 +11,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAllByStatusNot(String status);
     List<Order> findAllByUser_idAndStatusNot(Long id, String status);
     List<Order> findAllByUser_idAndStatus(Long id, String status);
+    List<Order> findByUser_IdAndStatusOrStatus(Long id, String status1, String status2);
 }

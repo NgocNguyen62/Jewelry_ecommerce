@@ -29,8 +29,8 @@
 
     <!-- Page Header Start -->
     <div class="container-fluid bg-secondary mb-5">
-        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-            <h1 class="font-weight-semi-bold text-uppercase mb-3">Sản phẩm</h1>
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 150px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3" th:text="${title}"></h1>
         </div>
     </div>
     <!-- Page Header End -->
@@ -43,7 +43,7 @@
             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                 <h6 class="text-truncate mb-3" th:text="${product.productName}"></h6>
                 <div class="d-flex justify-content-center">
-                    <h6 th:text="${product.discount}"></h6><h6 class="text-muted ml-2"><del th:text="'$' + ${product.price}"></del></h6>
+                    <h6 th:text="${#numbers.formatDecimal(product.discount, 0, 'COMMA', 0, 'POINT')} + 'đ'"></h6><h6 class="text-muted ml-2"><del th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + 'đ'"></del></h6>
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-between bg-light border">
@@ -64,7 +64,8 @@
                 </a>
             </li>
             <li th:class="${pageNumber==productPage.number + 1} ? 'page-item active' : 'page-item'" th:each="pageNumber : ${pageNumbers}">
-                <a th:text="${pageNumber}" class="page-link" th:href="@{/products(size=${productPage.size}, page=${pageNumber})}"></a>
+                <a th:text="${pageNumber}" class="page-link" th:href="${currentUrl} == '/search' ? @{${currentUrl}(keyword=${keyword},size=${productPage.size}, page=${pageNumber})} : @{${currentUrl}(size=${productPage.size}, page=${pageNumber})}"></a>
+<!--                <a th:text="${pageNumber}" class="page-link" th:href="@{${currentUrl}(size=${productPage.size}, page=${pageNumber})}"></a>-->
             </li>
 
             <li th:class="${productPage.number == productPage.totalPages - 1} ? 'page-item disabled' : 'page-item'">

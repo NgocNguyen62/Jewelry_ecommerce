@@ -15,8 +15,7 @@
     <tr>
       <th>Sản phẩm</th>
       <th>Phân loại</th>
-      <th>Giá gốc</th>
-      <th>Giá khuyến mại</th>
+      <th>Giá tiền</th>
       <th>Số lượng</th>
     </tr>
     <tr th:each="item : ${items}">
@@ -25,16 +24,17 @@
         <span th:text="${item.product.productName}"></span>
       </td>
       <td th:text="${item.product.category.getCategoryName()}"></td>
-      <td th:text="${item.product.price}"></td>
-      <td th:text="${item.product.discount}"></td>
+      <td th:text="${#numbers.formatDecimal(item.productPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></td>
       <td>
         <span th:text="${item.quantity}"></span>
       </td>
     </tr>
     <tr>
       <td>
-        <div class="total">Tổng tiền: <span th:text="${order.get().getTotalPrice()}"></span></div>
-        <div>Thời gian đặt: <span th:text="${order.get().getOrderTime()}"></span></div>
+        <div class="total">Tổng tiền hàng: <span th:text="${#numbers.formatDecimal(order.get().getTotalPrice(), 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+        <div>Phí vận chuyển: <span th:text="${#numbers.formatDecimal(shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+        <div>Thành tiền: <span th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+        <div>Thời gian đặt: <span th:text="${#temporals.format(order.get().getOrderTime(), 'dd/MM/yyyy HH:mm:ss')}"></span></div>
         <div>Họ và tên người nhận: <span th:text="${order.get().getReceiverName()}"></span></div>
         <div>Địa chỉ nhận hàng: <span th:text="${order.get().getReceiverAddress()}"></span></div>
         <div>Số điện thoại: <span th:text="${order.get().getReceiverPhone()}"></span></div>

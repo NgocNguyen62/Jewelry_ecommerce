@@ -87,7 +87,7 @@ public class HomeController {
         User userEdit = userService.getCurrentUser();
         model.addAttribute("editMode", true);
         model.addAttribute("user", userEdit);
-        return "redirect:/client/myAccount";
+        return "/client/myAccount";
     }
     @PostMapping("/createAccount")
     public String createAccount(@ModelAttribute("user") User user){
@@ -110,16 +110,31 @@ public class HomeController {
     }
     @RequestMapping("/home")
     public String home(Model model) throws Exception {
-        model.addAttribute("topSale", productService.topSaleProduct(10));
+        model.addAttribute("topSale", productService.topSaleProduct(CommonConstants.NUM_TOP_SALE));
         List<Category> topCateSale = categoryService.topCateSale(CommonConstants.NUM_TOP_SALE);
         model.addAttribute("topCateSale", topCateSale);
         model.addAttribute("newest", productService.newestProduct(CommonConstants.NUM_NEWEST_PRODUCTS));
         return "/client/index2";
     }
     @RequestMapping("/search")
-    public String search(Model model, @Param("keyword") String keyword) throws Exception {
+    public String search(Model model,
+                         @Param("keyword") String keyword,
+                         @RequestParam("page") Optional<Integer> page,
+                         @RequestParam("size") Optional<Integer> size) throws Exception {
         List<Product> results = productService.searchResult(keyword);
-        model.addAttribute("products", results);
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(CommonConstants.SIZE_OF_PAGE);
+        Page<Product> productPage = productService.getPageProducts(PageRequest.of(currentPage - 1, pageSize), results);
+        model.addAttribute("title", "Kết quả tìm kiếm " + keyword);
+        model.addAttribute("productPage", productPage);
+        int totalPages = productPage.getTotalPages();
+        if(totalPages > 0){
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        model.addAttribute("keyword", keyword);
         return "/client/product";
     }
     @RequestMapping("/products")
@@ -130,6 +145,7 @@ public class HomeController {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(CommonConstants.SIZE_OF_PAGE);
         Page<Product> productPage = productService.getAllProducts(PageRequest.of(currentPage - 1, pageSize));
+        model.addAttribute("title", "Sản phẩm");
         model.addAttribute("productPage", productPage);
         int totalPages = productPage.getTotalPages();
         if(totalPages > 0){
@@ -173,5 +189,25 @@ public class HomeController {
     @GetMapping("/changePassForm")
     public String changePassForm(){
         return "/client/change-password";
+    }
+
+    @RequestMapping("/category")
+    public String listProducts(Model model,
+                               @RequestParam("id") Long id,
+                               @RequestParam("page") Optional<Integer> page,
+                               @RequestParam("size") Optional<Integer> size){
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(CommonConstants.SIZE_OF_PAGE);
+        Page<Product> productPage = productService.getPageProducts(PageRequest.of(currentPage - 1, pageSize), productService.getProductByCate(id));
+        model.addAttribute("title", categoryService.findById(id).get().getCategoryName());
+        model.addAttribute("productPage", productPage);
+        int totalPages = productPage.getTotalPages();
+        if(totalPages > 0){
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        return "/client/product";
     }
 }

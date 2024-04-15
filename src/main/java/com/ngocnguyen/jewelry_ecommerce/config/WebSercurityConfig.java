@@ -1,5 +1,6 @@
 package com.ngocnguyen.jewelry_ecommerce.config;
 
+import com.ngocnguyen.jewelry_ecommerce.component.CustomAuthenticationSuccess;
 import com.ngocnguyen.jewelry_ecommerce.repository.UserRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @RequiredArgsConstructor
 public class WebSercurityConfig {
     private final UserRepository userRepository;
+    @Autowired
+    private CustomAuthenticationSuccess successHandler;
     public UserDetailsService userDetailsService(){
         return  new CustomUserDetailsService(userRepository);
     }
@@ -49,7 +52,7 @@ public class WebSercurityConfig {
                         form ->form
                                 .loginPage("/login")
 //                                .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/home")
+                                .successHandler(successHandler)
                                 .permitAll()
                 ).logout(
                         logout->logout

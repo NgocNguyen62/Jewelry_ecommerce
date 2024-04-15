@@ -1,5 +1,6 @@
 package com.ngocnguyen.jewelry_ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,15 +49,19 @@ public class Product {
     @Column(name = "update_by")
     private Long updateBy;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<Rate> rates;
 
+    @JsonIgnore
     @Transient
     private MultipartFile file;
+    @JsonIgnore
     @Transient
     private MultipartFile[] files;
 }

@@ -7,9 +7,13 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="/css/sidebar.css">
+
   <style>
     #new-product{
       margin-bottom: 20px;
+    }
+    .pagination{
+      padding-left: 50%;
     }
   </style>
 </head>
@@ -20,7 +24,7 @@
   <div th:insert="/navbar :: navbar"></div>
   <h3>Quản lý sản phẩm</h3>
   <a id = "new-product" href="/product/add" class="btn btn-success">Tạo mới</a>
-  <table class="table table-active">
+  <table class="table table-bordered table-striped" id="productTable">
     <tr>
       <th>Avatar</th>
       <th>Tên sản phẩm</th>
@@ -30,7 +34,8 @@
       <th>Trạng thái</th>
 
     </tr>
-    <tr th:each="item : ${products}">
+    <tr th:each="item, iStat : ${productPage.content}">
+<!--    <tr th:each="item : ${products}">-->
       <td><img th:src="${item.avatar}" style="width:150px;height:150px;"></td>
       <td th:text="${item.productName}"></td>
       <td th:text="${item.category.getCategoryName()}"></td>
@@ -66,7 +71,39 @@
       </td>
     </tr>
   </table>
-</div>
+  <nav th:if="${productPage.totalPages > 1}" aria-label="...">
+    <ul class="pagination justify-content-center">
+      <li th:class="${productPage.number == 0} ? 'page-item disabled' : 'page-item'">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <li th:class="${pageNumber==productPage.number + 1} ? 'page-item active' : 'page-item'" th:each="pageNumber : ${pageNumbers}">
+        <a th:text="${pageNumber}" class="page-link" th:href="${currentUrl} == '/search' ? @{${currentUrl}(keyword=${keyword},size=${productPage.size}, page=${pageNumber})} : @{${currentUrl}(size=${productPage.size}, page=${pageNumber})}"></a>
+        <!--                <a th:text="${pageNumber}" class="page-link" th:href="@{${currentUrl}(size=${productPage.size}, page=${pageNumber})}"></a>-->
+      </li>
 
+      <li th:class="${productPage.number == productPage.totalPages - 1} ? 'page-item disabled' : 'page-item'">
+        <a class="page-link" href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $("#productTable").DataTable({
+      pageLength: 2,
+      ajax: {
+        url: '/product/index'
+      },
+    });
+  })
+</script>
 </body>
 </html>

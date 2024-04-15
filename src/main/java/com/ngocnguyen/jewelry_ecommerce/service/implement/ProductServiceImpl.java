@@ -1,15 +1,20 @@
 package com.ngocnguyen.jewelry_ecommerce.service.implement;
 
 import com.ngocnguyen.jewelry_ecommerce.component.CustomUserDetails;
+import com.ngocnguyen.jewelry_ecommerce.dto.ProductDTO;
 import com.ngocnguyen.jewelry_ecommerce.entity.Product;
 import com.ngocnguyen.jewelry_ecommerce.repository.ProductRepository;
+import com.ngocnguyen.jewelry_ecommerce.repository.ProductTableRepository;
 import com.ngocnguyen.jewelry_ecommerce.service.ProductService;
 import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,17 +26,25 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductTableRepository tableRepository;
+    @Autowired
+    private final ModelMapper mapper;
+    public ProductServiceImpl(ModelMapper mapper) {
+        this.mapper = mapper;
+    }
+
     @Override
     public List<Product> findAll() {
         return productRepository.findAll();
@@ -39,19 +52,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product product) throws Exception {
-        productRepository.save(product);
-        String avatar = ImageUpload(product.getId(), product.getFile());
-        product.setAvatar(avatar);
-        StringBuilder builder = new StringBuilder();
-        for (MultipartFile file : product.getFiles()) {
-           String image = ImageUpload(product.getId(), file);
-           builder.append(image).append(",");
-        }
-
-        if(builder.toString().endsWith(",")){
-            builder = new StringBuilder(builder.substring(0, builder.length() - 1));
-        }
-        product.setImages(builder.toString());
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
@@ -71,6 +71,25 @@ public class ProductServiceImpl implements ProductService {
         } else {
             throw new Exception("Chưa đăng nhập");
         }
+        productRepository.save(product);
+        if(!product.getFile().isEmpty()){
+            String avatar = ImageUpload(product.getId(), product.getFile());
+            product.setAvatar(avatar);
+        }
+        if(!(product.getFiles().length == 0)){
+            StringBuilder builder = new StringBuilder();
+            for (MultipartFile file : product.getFiles()) {
+                String image = ImageUpload(product.getId(), file);
+                builder.append(image).append(",");
+            }
+
+            if(builder.toString().endsWith(",")){
+                builder = new StringBuilder(builder.substring(0, builder.length() - 1));
+            }
+            product.setImages(builder.toString());
+        }
+
+
         return productRepository.save(product);
     }
 
@@ -151,14 +170,15 @@ public class ProductServiceImpl implements ProductService {
         return Arrays.stream(productSales()).sum();
     }
 
-    public List<Product> topSales(){
-        List<Product> products = findAll();
+    @Override
+    public List<Product> sortBySales(){
+        List<Product> products = productRepository.findAllByProductStatus(CommonConstants.UNLOCK_STATUS);
         products.sort(Comparator.comparingInt(Product::getSales).reversed());
         return products;
     }
     @Override
     public List<Product> topSaleProduct(int limit){
-        List<Product> products = topSales();
+        List<Product> products = sortBySales();
         if(limit < products.size()){
             return products.subList(0, limit);
         }
@@ -168,7 +188,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int[] countInTopSales(int maxTop){
         int size = maxTop;
-        List<Product> products = topSales();
+        List<Product> products = sortBySales();
         if(size > products.size()){
             size = products.size();
         }
@@ -182,7 +202,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String[] nameOfTopSales(int maxTop){
         int size = maxTop;
-        List<Product> products = topSales();
+        List<Product> products = sortBySales();
         if(size > products.size()){
             size = products.size();
         }
@@ -201,11 +221,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> newestProduct(int limit){
-        List<Product> products = findAll();
+    public List<Product> sortByNewest(){
+        List<Product> products = productRepository.findAllByProductStatus(CommonConstants.UNLOCK_STATUS);
         List<Product> sortedProducts = products.stream()
-                .sorted(Comparator.comparing(Product::getUpdateAt, Comparator.nullsLast(Comparator.reverseOrder())))
-                .collect(Collectors.toList());
+                .sorted(Comparator.comparing(Product::getUpdateAt, Comparator.nullsLast(Comparator.reverseOrder()))).toList();
+        return sortedProducts;
+    }
+
+    @Override
+    public List<Product> newestProduct(int limit){
+        List<Product> sortedProducts = sortByNewest();
         return sortedProducts.subList(0,Math.min(sortedProducts.size(),limit));
     }
     @Override
@@ -223,7 +248,7 @@ public class ProductServiceImpl implements ProductService {
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
         List<Product> list;
-        List<Product> products = findAll();
+        List<Product> products = productRepository.findAllByProductStatus(CommonConstants.UNLOCK_STATUS);
         if(products.size() < startItem){
             list = Collections.emptyList();
         } else {
@@ -247,5 +272,31 @@ public class ProductServiceImpl implements ProductService {
         }
         Page<Product> productPage = new PageImpl<Product>(list, PageRequest.of(currentPage, pageSize), products.size());
         return productPage;
+    }
+    @Override
+    public List<Product> getProductByCate(Long cateId){
+        return productRepository.findAllByCategory_Id(cateId);
+    }
+
+
+    public List<ProductDTO> convertToDTO(List<Product> products){
+        List<ProductDTO> dto = new ArrayList<>();
+        for(Product product:products){
+            ProductDTO item = mapper.map(product, ProductDTO.class);
+            dto.add(item);
+        }
+        return dto;
+    }
+    @Override
+    public DataTablesOutput<ProductDTO> getAllProductDTO(DataTablesInput input){
+        DataTablesOutput<Product> productOutput = tableRepository.findAll(input);
+        List<ProductDTO> productDTOS = convertToDTO(productOutput.getData());
+        DataTablesOutput<ProductDTO> output = new DataTablesOutput<>();
+        output.setData(productDTOS);
+        output.setDraw(productOutput.getDraw());
+        output.setError(productOutput.getError());
+        output.setRecordsFiltered(productOutput.getRecordsFiltered());
+        output.setRecordsTotal(productOutput.getRecordsTotal());
+        return output;
     }
 }

@@ -56,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
         newOrder.setReceiverName(form.getReceiverName());
         newOrder.setReceiverPhone(form.getReceiverPhone());
         newOrder.setNote(form.getNote());
-        newOrder.setStatus(CommonConstants.DELIVERING_STATUS);
+        newOrder.setStatus(CommonConstants.WAIT_STATUS);
         newOrder.setOrderTime(LocalDateTime.now());
         orderRepository.save(newOrder);
 
@@ -146,6 +146,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getWaitingOrder() throws Exception {
+        List<Order> waitConfirm = orderRepository.findAllByUser_idAndStatus(getCurrentUser().getId(), CommonConstants.WAIT_STATUS);
+        List<Order> waitCancel = orderRepository.findAllByUser_idAndStatus(getCurrentUser().getId(), CommonConstants.WAIT_CANCEL);
+        waitConfirm.addAll(waitCancel);
+        return waitConfirm;
+    }
+
+    @Override
     public List<Order> getSuccessOrder() {
         return orderRepository.findAllByStatus(CommonConstants.SUCCESS_STATUS);
     }
@@ -157,6 +165,42 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> history() throws Exception {
-        return orderRepository.findAllByUser_idAndStatusNot(getCurrentUser().getId(), CommonConstants.DELIVERING_STATUS);
+        List<Order> success = orderRepository.findAllByUser_idAndStatus(getCurrentUser().getId(), CommonConstants.SUCCESS_STATUS);
+        List<Order> cancel = orderRepository.findAllByUser_idAndStatus(getCurrentUser().getId(), CommonConstants.CANCEL_STATUS);
+        success.addAll(cancel);
+        return success;
+    }
+
+    @Override
+    public Order save(Order order){
+        return orderRepository.save(order);
+    }
+    @Override
+    public void requestCancel(Long id, String reason){
+        Optional<Order> order = orderRepository.findById(id);
+        if(order.isPresent()){
+            order.get().setStatus(CommonConstants.WAIT_CANCEL);
+            order.get().setNote(reason);
+            orderRepository.save(order.get());
+        }
+        order.orElseThrow();
+    }
+    @Override
+    public void confirmOrderRequest(Long id){
+        Optional<Order> order = orderRepository.findById(id);
+        if(order.isPresent()){
+            order.get().setStatus(CommonConstants.DELIVERING_STATUS);
+            orderRepository.save(order.get());
+
+        }
+        order.orElseThrow();
+    }
+    @Override
+    public List<Order> getWaitConfirm(){
+        return orderRepository.findAllByStatus(CommonConstants.WAIT_STATUS);
+    }
+    @Override
+    public List<Order> getCancelRequest(){
+        return orderRepository.findAllByStatus(CommonConstants.WAIT_CANCEL);
     }
 }
