@@ -1,10 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Quản lý phân loại</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<!--    <link type="text/css" rel="stylesheet" href="bootstrap.min.css" th:href="@{bootstrap.min.css}"/>-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <style>
+        #new-cate{
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
+<div th:insert="/sidebar :: sidebar"></div>
 
+<div class="content">
+    <div th:insert="/navbar :: navbar"></div>
+    <h3>Quản lý phân loại</h3>
+    <a id="new-cate" href="/category/add" class="btn btn-success">Tạo mới</a>
+    <table class="table table-active">
+        <tr>
+            <th>Tên phân loại</th>
+            <th>Trạng thái</th>
+            <th>Số lượng sản phẩm</th>
+        </tr>
+        <tr th:each="cate : ${cates}">
+            <td th:text="${cate.categoryName}"></td>
+            <td th:if="${cate.categoryStatus} == 0" th:text="'Không khóa'"></td>
+            <td th:if="${cate.categoryStatus} == 1" th:text="'Khóa'"></td>
+            <td th:text="${cate.products.size()}"></td>
+            <td>
+                <a th:href="@{/category/edit?id={id}(id=${cate.id})}" class="btn btn-primary">Sửa</a>
+                <a data-toggle="modal" th:data-target="'#deleteModal-' + ${cate.id}" class="btn btn-danger">Xóa</a>
+                <div class="modal fade" th:id="'deleteModal-' + ${cate.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Xác nhận xóa phân loại có id=<span th:text="${cate.id}"></span> ?
+                            </div>
+                            <div class="modal-footer">
+                                <a type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</a>
+                                <a th:href="@{/category/delete?id={id}(id=${cate.id})}" type="button" class="btn btn-danger">Xóa</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--        <a th:href="@{/cate/details?id={id}(id=${user.id})}" class="btn btn-primary">View</a>-->
+            </td>
+        </tr>
+    </table>
+</div>
+<!--<div th:insert="/user/fragment :: demo"></div>-->
 </body>
 </html>

@@ -28,6 +28,12 @@ $().ready(function (){
             },
             "address":{
                 required: true
+            },
+            "birthday": {
+                date: true,
+                max: function() {
+                    return new Date().toISOString().split("T")[0];
+                }
             }
         },
         messages: {
@@ -54,6 +60,9 @@ $().ready(function (){
             },
             "address":{
                 required: "Nhập địa chỉ"
+            },
+            "birthday": {
+                max: "Ngày sinh không hợp lệ"
             }
         },
     })

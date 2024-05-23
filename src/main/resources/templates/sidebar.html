@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div th:fragment="sidebar" class="sidebar">
+  <a th:href="@{/dashboard}"><i class="fa fa-fw fa-home"></i> Dashboard</a>
+
+    <a th:href="@{/user/index}"><i class="fa fa-fw fa-user"></i> Người dùng</a>
+    <a th:href="@{/category/index}"><i class="fa fa-fw fa-list"></i> Phân loại</a>
+  <a th:href="@{/product/index}"><i class="fa fa-fw fa-shopping-bag"></i> Sản phẩm</a>
+   <a th:href="@{/order/manager}"><i class="fa fa-fw fa-file"></i> Đơn hàng</a>
+</div>
+
+
+</body>
+</html>

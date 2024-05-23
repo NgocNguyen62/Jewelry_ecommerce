@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.1/css/dataTables.bootstrap.min.css"/>
+  <link rel="stylesheet" href="/css/sidebar.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link type="text/css" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css">
+  <style>
+    .table{
+      width: 100%;
+    }
+    tr.selected {
+      background-color: #a2a0a6;
+    }
+    #productTable_wrapper{
+      padding-top: 50px;
+    }
+
+    .dt-buttons{
+      display: flex;
+      justify-content: right;
+      padding-right: 15%;
+    }
+    .dt-button{
+      margin-left: 10px;
+    }
+    .dt-search{
+      padding-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+<div th:insert="/sidebar :: sidebar"></div>
+<div class="content">
+  <div th:insert="/navbar :: navbar"></div>
+  <h3><strong>Quản lý sản phẩm</strong></h3>
+  <form>
+    <div class="form-group col-md-3">
+      <label for="categorySelector">Phân loại</label>
+      <select class="form-control" id="categorySelector">
+        <option value="NULL">Tất cả</option>
+        <option th:each="cate : ${cates}" th:value="${cate.getCategoryName()}" th:text="${cate.getCategoryName()}"></option>
+      </select>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="genderSelector">Dành cho</label>
+      <select class="form-control" id="genderSelector">
+        <option value="">Tất cả</option>
+        <option th:each="item : ${genders}" th:value="${item}" th:text="${item}"></option>
+      </select>
+    </div>
+  </form>
+  <table id="productTable" class="table table-striped table-bordered table-hover dataTables-example statusToggle">
+    <thead>
+    <tr>
+      <th></th>
+      <th>STT</th>
+      <th>Hình ảnh</th>
+      <th>Tên sản phẩm</th>
+      <th>Phân loại</th>
+      <th>Dành cho</th>
+      <th>Giá gốc</th>
+      <th>Giá khuyến mại</th>
+      <th>Còn lại</th>
+      <th>Đã bán</th>
+      <th>Trạng thái</th>
+      <th>Tùy chọn</th>
+    </tr>
+    </thead>
+  </table>
+</div>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/2.0.1/js/dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/2.0.1/js/dataTables.bootstrap.min.js"></script>
+  <script src="/js/jquery.spring-friendly.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
+  <script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+  <script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.colVis.min.js"></script>
+<script>
+  var table = $('table#productTable').DataTable({
+    ajax: '/api/products',
+    serverSide: true,
+    dom: 'Bfrtip',
+    buttons: [
+      {
+        extend: 'excel',
+        text:'<i class="fa fa-file-excel"></i> Excel',
+        title: 'Sản phẩm',
+        "exportOptions": {
+          columns: [1, 3,4,5,6,7,8,9,10]
+        },
+        className: 'btn btn-success'
+      },
+      {
+        text: 'Tạo mới',
+        className: 'btn btn-success',
+        action: function (e, dt, node, config) {
+          window.location.href = '/product/add'; // Chuyển đến trang product/add
+        }
+      }
+      // 'colvis'
+    ],
+    select:{
+      style: 'multi'
+    },
+
+    columns: [
+      {
+        data: 'id',
+        render: function (data){
+          return '<input type="checkbox" name="productSelected" id="productSelected_'+data+'", value=' + data + '>'
+        },
+        orderable: false
+      },
+
+      {
+        data: 'id',
+        render: function(data, type, row, meta) {
+          if (type === 'display') {
+            return meta.row + 1; // Số thứ tự bắt đầu từ 1
+          }
+          return "";
+        },
+        orderable: false
+      },
+        {
+            data: 'avatar',
+            render: function(data, type, row) {
+                if (type === 'display') {
+                    return '<img src="' + data + '" width="50" height="50">';
+                }
+                return data;
+            },
+            orderable: false
+        },
+      {
+        data: 'productName',
+        "searchable": true,
+      },
+        {
+            data: 'category.categoryName',
+            render: function (data){
+                return data? data : "-"
+            }
+        },
+      {
+        data: 'gender'
+      },
+      {
+        data: 'price',
+        render: function(data, type, row) {
+          if (type === 'display' && data !== null) {
+            return parseFloat(data).toLocaleString('en-US') + 'đ';
+          }
+          return data;
+        }
+      },
+      {
+        data: 'discount',
+        render: function(data, type, row) {
+          if (type === 'display' && data !== null) {
+            return parseFloat(data).toLocaleString('en-US') + 'đ';
+          }
+          return data;
+        }
+      },
+      {
+        data: 'quantity'
+      },
+      {data: 'sales'},
+      {
+        data: 'productStatus',
+        render: function (data){
+          return data == 0?"Không khóa":"Khóa"
+        }
+      },
+      {
+        data: 'id',
+        render: function (data, type){
+          if (type === 'display') {
+            var deleteButton = '<a data-toggle="modal" data-target="#deleteModal-' + data + '" class="btn btn-danger btn-sm">Xóa</a>';
+
+            // Mã HTML cho modal
+            var modal = '<div class="modal fade" id="deleteModal-' + data + '" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
+                    '<div class="modal-dialog modal-dialog-centered" role="document">' +
+                    '<div class="modal-content">' +
+                    '<div class="modal-header">' +
+                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                    '<span aria-hidden="true">&times;</span>' +
+                    '</button>' +
+                    '</div>' +
+                    '<div class="modal-body">' +
+                    'Xác nhận xóa sản phẩm có id=' + data + ' ?' +
+                    '</div>' +
+                    '<div class="modal-footer">' +
+                    '<a type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</a>' +
+                    '<a href="/product/delete?id=' + data + '" type="button" class="btn btn-danger">Xóa</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            return '<a class="btn btn-primary btn-sm" href="/product/edit?id=' + data + '">Sửa</a>'  + deleteButton + modal;
+          }
+          return null;
+        },
+        orderable: false
+      }
+    ]
+  });
+
+  $('select#categorySelector').change(function (){
+    var filter = '';
+    $('select#categorySelector option:selected').each(function (){
+      filter += $(this).text() + "+";
+    });
+    filter = filter.substring(0, filter.length-1);
+    table.column(4).search(filter).draw();
+  });
+
+  $('select#genderSelector').change(function (){
+    var filter = '';
+    $('select#genderSelector option:selected').each(function (){
+      filter += $(this).text() + "+";
+    });
+    filter = filter.substring(0, filter.length-1);
+    table.column(5).search(filter).draw();
+  });
+
+  table.on('change', 'input[type="checkbox"]', function() {
+    var isChecked = $(this).prop('checked');
+    var $row = $(this).closest('tr');
+
+    if (isChecked) {
+      $row.addClass('selected');
+      table.row($row).select();
+    } else {
+      $row.removeClass('selected');
+      table.row($row).deselect();
+    }
+  });
+
+  table.on('click', 'tbody tr', function (e) {
+    e.currentTarget.classList.toggle('selected');
+  });
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <style>
+        .pie-chart{
+            width: 250px;
+            /*height: 200px;*/
+        }
+        .bar-chart{
+            /*width: 600px;*/
+            height: 400px;
+
+        }
+        .line-chart{
+            width: 90%;
+            margin-bottom: 10px;
+            /*height: 800px;*/
+        }
+        .chart{
+            margin-top: 30px;
+            background-color: white;
+            box-shadow: #a2a0a6;
+            height: 300px;
+        }
+        .row{
+            margin-left: 20px;
+            display: flex;
+        }
+        .content{
+            background-color: #eeeeee;
+        }
+        span{
+            font-size: large;
+        }
+    </style>
+</head>
+<body>
+
+<div th:insert="/sidebar :: sidebar"></div>
+<div class="content">
+
+    <div th:insert="/navbar :: navbar"></div>
+    <div class="container-fluid">
+        <div class="chart col-md-5">
+            <span>Thống kê sản phẩm theo phân loại</span>
+            <div class="pie-chart">
+                <canvas id="Pie-chart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="chart col-md-6">
+            <span>Số lượng bán theo ngày</span>
+            <div class="line-chart">
+                <canvas id="sale-by-day"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="chart">
+        <span>Top 10 sản phẩm bán chạy nhất</span>
+        <div class="bar-chart">
+            <canvas id="top-sales"></canvas>
+        </div>
+    </div>
+
+
+</div>
+<footer>
+
+</footer>
+
+<!--    <div th:text="${label}"></div>-->
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var label = /*[[${label}]]*/[];
+        var data = /*[[${data}]]*/[];
+
+        var labelTopSale = /*[[${labelTopSale}]]*/[];
+        var dataTopSale = /*[[${dataTopSale}]]*/[];
+
+        var arrDays = /*[[${arrDays}]]*/[];
+        var saleByDay = /*[[${saleByDay}]]*/[];
+        /*]]>*/
+    </script>
+    <script src="/js/chart.js"></script>
+</body>
+</html>

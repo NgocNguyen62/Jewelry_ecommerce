@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Edit</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/sidebar.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+  <script src="https://cdn.tiny.cloud/1/y4ys7bzo1siszixkorztunnfj1j2zhpvtf0ko94iob96r857/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+</head>
+<body>
+<div th:insert="/sidebar :: sidebar"></div>
+<div class="content">
+  <div th:insert="/navbar :: navbar"></div>
+<div class="container col-6">
+  <h3>Chỉnh sửa sản phẩm</h3>
+  <div class="col-md-auto">
+    <div th:insert="/product/form"></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

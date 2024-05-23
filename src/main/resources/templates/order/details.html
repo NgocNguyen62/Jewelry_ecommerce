@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>EShopper - Bootstrap Shop Template</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="Free HTML Templates" name="keywords">
+  <meta content="Free HTML Templates" name="description">
+
+  <!-- Favicon -->
+  <link href="/template2/img/favicon.ico" rel="icon">
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Libraries Stylesheet -->
+  <link href="/template2/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+  <!-- Customized Bootstrap Stylesheet -->
+  <link href="/template2/css/style.css" rel="stylesheet">
+</head>
+<body>
+<div th:insert="/client/header2 :: header"></div>
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+    <h1 class="font-weight-semi-bold text-uppercase mb-3">Chi tiết đơn hàng</h1>
+  </div>
+</div>
+<!-- Page Header End -->
+<div th:fragment="detail">
+<div class="container" style="width: 75%">
+<!--  <h3>Chi tiết đơn hàng</h3>-->
+  <table class="table table-active">
+    <tr>
+      <th>Sản phẩm</th>
+      <th>Tên sản phẩm</th>
+      <th>Phân loại</th>
+      <th>Giá tiền</th>
+      <th>Số lượng</th>
+    </tr>
+    <tr th:each="item : ${order.getItems()}">
+      <td>
+        <img th:src="${item.product.avatar}" style="width:75px;height:75px; vertical-align: middle;">
+      </td>
+      <td>
+        <span th:text="${item.product.productName}" style="vertical-align: middle;"></span>
+      </td>
+      <td th:text="${item.product.category.getCategoryName()}"></td>
+      <td th:text="${#numbers.formatDecimal(item.productPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></td>
+      <td>
+        <span th:text="${item.quantity}"></span>
+      </td>
+    </tr>
+  </table>
+  <div class="sumary" style="display: flex; justify-content: space-between">
+    <div style="text-align: left">
+      <div class="total">Tổng tiền hàng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice(), 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+      <div>Phí vận chuyển: <span th:text="${#numbers.formatDecimal(shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+      <div>Thành tiền: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+      <div>Thời gian đặt: <span th:text="${#temporals.format(order.getOrderTime(), 'dd/MM/yyyy HH:mm:ss')}"></span></div>
+    </div>
+    <div style="text-align: left; margin-left: 20px">
+      <div>Họ và tên người nhận: <span th:text="${order.getReceiverName()}"></span></div>
+      <div>Địa chỉ nhận hàng: <span th:text="${order.getReceiverAddress()}"></span></div>
+      <div>Số điện thoại: <span th:text="${order.getReceiverPhone()}"></span></div>
+      <div>Ghi chú: <span th:text="${order.getNote()}"></span></div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- Footer Start -->
+<div th:insert="/client/footer :: footer"></div>
+<!-- Footer End -->
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="/template2/lib/easing/easing.min.js"></script>
+<script src="/template2/lib/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- Contact Javascript File -->
+<script src="/template2/mail/jqBootstrapValidation.min.js"></script>
+<script src="/template2/mail/contact.js"></script>
+
+<!-- Template Javascript -->
+<script src="/template2/js/main.js"></script>
+<script src="/js/addCart.js"></script>
+</body>
+</html>

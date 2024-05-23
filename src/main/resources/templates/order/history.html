@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Đơn hàng</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="/template2/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/template2/css/style.css" rel="stylesheet">
+
+</head>
+<body>
+<div th:insert="/client/header2 :: header"></div>
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Lịch sử mua hàng</h1>
+    </div>
+</div>
+<!-- Page Header End -->
+<div class="col-3"></div>
+<div class="container col-6">
+    <div th:each="order : ${orders}">
+        <table class="table table-active">
+            <tr>
+                <div class="text-right"><small th:text="${#temporals.format(order.getOrderTime(), 'dd-MM-yyyy HH:mm:ss')}"></small></div>
+                <div style="background-color: rgba(0, 0, 0, 0.075);">
+                    <img th:src="${order.getItems()[0].product.avatar}" style="width:75px;height:75px;">
+                    <span th:text="'  ' + ${order.getItems()[0].product.productName}"></span>
+                </div>
+            </tr>
+            <tr>
+                <td>
+                    <div>Giá trị đơn hàng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+                    <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>
+                    <div><a th:href="@{/order/details?id={id}(id=${order.getId()})}">Chi tiết</a></div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+    </table>
+</div>
+</div>
+<!-- Footer Start -->
+<div th:insert="/client/footer :: footer"></div>
+<!-- Footer End -->
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="/template2/lib/easing/easing.min.js"></script>
+<script src="/template2/lib/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- Contact Javascript File -->
+<script src="/template2/mail/jqBootstrapValidation.min.js"></script>
+<script src="/template2/mail/contact.js"></script>
+
+<!-- Template Javascript -->
+<script src="/template2/js/main.js"></script>
+</body>
+</html>

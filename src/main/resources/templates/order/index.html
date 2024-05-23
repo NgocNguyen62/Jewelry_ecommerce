@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Đơn hàng</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="/template2/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/template2/css/style.css" rel="stylesheet">
+    <style>
+        body .modal-dialog { /* Width */
+            max-width: 100%;
+            width: auto !important;
+            display: inline-block;
+            justify-content: center;
+        }
+        .modal{
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+<div th:insert="/client/header2 :: header"></div>
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 150px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Đơn hàng đã đặt</h1>
+    </div>
+</div>
+<!-- Page Header End -->
+<div class="col-3"></div>
+<div class="container col-10">
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="nav nav-tabs justify-content-center border-secondary mb-4">
+                <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Chờ xác nhận</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Đang giao</a>
+<!--                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Lịch sử mua hàng</a>-->
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="tab-pane-1">
+                    <div th:each="order : ${waitOrders}">
+                            <table class="table table-active">
+                                <tr>
+                                    <div class="text-right"><small th:text="${#temporals.format(order.getOrderTime(), 'dd-MM-yyyy HH:mm:ss')}"></small></div>
+                                    <div style="background-color: rgba(0, 0, 0, 0.075);">
+                                        <img th:src="${order.getItems()[0].product.avatar}" style="width:75px;height:75px;">
+                                        <span th:text="'  ' + ${order.getItems()[0].product.productName}"></span>
+                                    </div>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div>Giá trị đơn hàng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+                                        <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>
+                                        <a data-toggle="modal" th:data-target="'#detail-' + ${order.getId()}" class="btn btn-primary">Chi tiết</a>
+                                        <div class="modal fade" th:id="'detail-' + ${order.getId()}" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div class="modal-dialog d-flex justify-content-center">
+                                                <div class="modal-content w-75">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Chi tiết đơn hàng</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body p-4">
+                                                        <div th:insert="/order/details :: detail"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            </table>
+                            </table>
+                    </div>
+
+                    </div>
+                <div class="tab-pane fade" id="tab-pane-2">
+                    <div th:each="order : ${deliverOrders}">
+                            <table class="table table-active">
+                                <tr>
+                                    <div class="text-right"><small th:text="${#temporals.format(order.getOrderTime(), 'dd-MM-yyyy HH:mm:ss')}"></small></div>
+                                    <div style="background-color: rgba(0, 0, 0, 0.075);">
+                                        <img th:src="${order.getItems()[0].product.avatar}" style="width:75px;height:75px;">
+                                        <span th:text="'  ' + ${order.getItems()[0].product.productName}"></span>
+                                    </div>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div>Giá trị đơn hàng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+                                        <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>
+                                        <a data-toggle="modal" th:data-target="'#detail-' + ${order.getId()}" class="btn btn-primary">Chi tiết</a>
+                                        <div class="modal fade" th:id="'detail-' + ${order.getId()}" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div class="modal-dialog d-flex justify-content-center">
+                                                <div class="modal-content w-75">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Chi tiết đơn hàng</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body p-4">
+                                                        <div th:insert="/order/details :: detail"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                <a class="btn btn-success" th:href="@{/order/confirm?id={id}(id=${order.getId()})}">Đã nhận</a>
+                                <a data-toggle="modal" th:data-target="'#cancel-' + ${order.getId()}" class="btn btn-danger">Hủy đơn</a>
+                                <div class="modal fade" th:id="'cancel-' + ${order.getId()}" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog d-flex justify-content-center">
+                                        <div class="modal-content w-75">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel1">Lý do hủy đơn</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body p-4">
+                                                <form th:action="@{requestCancel?id={id}(id=${order.getId()})}" method="post">
+                                                    <div data-mdb-input-init class="form-outline mb-4">
+                                                        <textarea type="text" name="reason" class="form-control"></textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary" data-mdb-dismiss="modal">Gửi</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                                </tr>
+                        </div>
+                        </table>
+                    </div>
+<!--                <div class="tab-pane fade" id="tab-pane-3">-->
+<!--                    <div th:each="order : ${history}">-->
+<!--                        <table class="table table-active">-->
+<!--                            <tr>-->
+<!--                                <div class="text-right"><small th:text="${#temporals.format(order.getOrderTime(), 'dd-MM-yyyy HH:mm:ss')}"></small></div>-->
+<!--                                <div style="background-color: rgba(0, 0, 0, 0.075);">-->
+<!--                                    <img th:src="${order.getItems()[0].product.avatar}" style="width:75px;height:75px;">-->
+<!--                                    <span th:text="'  ' + ${order.getItems()[0].product.productName}"></span>-->
+<!--                                </div>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>-->
+<!--                                    <div>Giá trị đơn hàng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>-->
+<!--                                    <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>-->
+<!--                                    <div><a th:href="@{/order/details?id={id}(id=${order.getId()})}">Chi tiết</a></div>-->
+
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<!-- Footer Start -->
+<div th:insert="/client/footer :: footer"></div>
+<!-- Footer End -->
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="/template2/lib/easing/easing.min.js"></script>
+<script src="/template2/lib/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- Contact Javascript File -->
+<script src="/template2/mail/jqBootstrapValidation.min.js"></script>
+<script src="/template2/mail/contact.js"></script>
+
+<!-- Template Javascript -->
+<script src="/template2/js/main.js"></script>
+</body>
+</html>

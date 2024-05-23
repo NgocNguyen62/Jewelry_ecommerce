@@ -4,7 +4,7 @@
 >
 <head>
   <meta charset="UTF-8">
-  <title>Registration and Login System</title>
+  <title>Đăng nhập</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -18,15 +18,20 @@
     <div class="col-md-6 offset-md-3">
 
       <div th:if="${param.error}">
-        <div class="alert alert-danger">Invalid Email or Password</div>
+        <div class="alert alert-danger">Email hoặc mật khẩu sai</div>
       </div>
       <div th:if="${param.logout}">
-        <div class="alert alert-success"> You have been logged out.</div>
+        <div class="alert alert-success"> Đã đăng xuất.</div>
+      </div>
+      <div th:if="${param.passwordResetSuccess}">
+        <div class="alert alert-success">
+          Mật khẩu đã được đặt lại. Đăng nhập bằng mật khẩu mới.
+        </div>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <h2 class="text-center">Login Form</h2>
+          <h2 class="text-center">Đăng nhập</h2>
         </div>
         <div class="card-body">
           <form
@@ -42,25 +47,29 @@
                       id="username"
                       name="username"
                       class="form-control"
-                      placeholder="Enter email address"
+                      placeholder="Nhập email"
               />
             </div>
 
             <div class="form-group mb-3">
-              <label class="control-label"> Password</label>
+              <label class="control-label"> Mật khẩu</label>
               <input
                       type="password"
                       id="password"
                       name="password"
                       class="form-control"
-                      placeholder="Enter password"
+                      placeholder="Nhập mật khẩu"
               />
             </div>
-            <div class="form-group mb-3">
-              <button type="submit" class="btn btn-primary" >Submit</button>
-              <span> Not registered ?
-<!--                                <a th:href="@{/user/add}">Register/Signup here</a>-->
-                            </span>
+            <div class="form-group mb-3" style="display: flex;">
+              <button type="submit" class="btn btn-primary" >Đăng nhập</button>
+              <div class="text-right" style="padding-left: 300px">
+              <a th:href="@{/forgot_password}">Quên mật khẩu?</a>
+                <br>
+              <span> Chưa có tài khoản?
+                <a th:href="@{/register}">Đăng ký</a>
+              </span>
+              </div>
             </div>
           </form>
         </div>

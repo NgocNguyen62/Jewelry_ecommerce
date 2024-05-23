@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>EShopper - Bootstrap Shop Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="/template2/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="/template2/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/template2/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/663337ada0c6737bd1339370/1hss12vgh';
+        s1.charset='UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+    })();
+</script>
+<!--End of Tawk.to Script-->
+
+        <div th:insert="/client/header2 :: header"></div>
+        <div id="header-carousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active" style="height: 450px;">
+                <img class="img-fluid" src="/template2/img/img.png" alt="Image">
+
+            </div>
+            <div class="carousel-item" style="height: 450px;">
+                <img class="img-fluid" src="/template2/img/img_1.png" alt="Image">
+                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+            <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                <span class="carousel-control-prev-icon mb-n2"></span>
+            </div>
+        </a>
+        <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+            <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                <span class="carousel-control-next-icon mb-n2"></span>
+            </div>
+        </a>
+    </div>
+    <!-- Featured Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Chất lượng</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-shipping-fast text-primary m-0 mr-2"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Miễn phí vận chuyển</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fas fa-exchange-alt text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Trả hàng 14 ngày</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-phone-volume text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Hỗ trợ 24/7</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Featured End -->
+
+
+    <!-- Products Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Sản phẩm bán chạy</span></h2>
+        </div>
+        <div class="text-right" style="padding-right: 50px">
+            <a href="/topSale">Xem thêm</a>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1" th:each="product : ${topSale}">
+                <div th:insert="/product-fragment :: product"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Products End -->
+
+    <!-- Products Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Sản phẩm mới</span></h2>
+        </div>
+        <div class="text-right" style="padding-right: 50px">
+            <a href="/newest">Xem thêm</a>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1" th:each="product : ${newest}">
+                <div th:insert="/product-fragment :: product"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Products End -->
+
+
+    <!-- Vendor Start -->
+    <div class="container-fluid py-5">
+        <div class="row px-xl-5">
+            <div class="col">
+                <div class="owl-carousel vendor-carousel">
+                    <div class="vendor-item border p-4">
+                        <img src="/template2/img/vendor-1.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="/template2/img/vendor-2.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="/template2/img/vendor-3.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="/template2/img/vendor-4.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="/template2/img/vendor-5.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="/template2/img/vendor-6.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="/template2/img/vendor-7.jpg" alt="">
+                    </div>
+                    <div class="vendor-item border p-4">
+                        <img src="/template2/img/vendor-8.jpg" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Vendor End -->
+
+        <!-- Footer Start -->
+        <div th:insert="/client/footer :: footer"></div>
+        <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="/template2/lib/easing/easing.min.js"></script>
+    <script src="/template2/lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="/template2/mail/jqBootstrapValidation.min.js"></script>
+    <script src="/template2/mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="/template2/js/main.js"></script>
+    <script src="/js/addCart.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,143 @@
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body, .container, .full-width .ubermenu-nav, .container-width {
+  width: 100%;
+}
+
+
+.container-width, .full-width .ubermenu-nav, .container{
+  max-width: 100%;
+}
+
+h2 {
+  color: #000000;
+  font-weight: 700;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.2em;
+}
+
+#header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000; /* Set a high z-index to ensure it's above other elements */
+  /*background-color: #a7a6a6;*/
+  color: white;
+  /*padding-top: 0;*/
+}
+
+#account a {
+    text-decoration: none;
+}
+
+#account a:hover {
+    margin-bottom: 2px;
+    border-bottom: 4px solid #585454;
+    
+}
+
+#account span {
+  font-weight: 500;
+}
+.divider{
+    border-left: 1px solid rgba(58, 55, 55, 0.1);
+    height: 30px;
+    vertical-align: middle;
+    position: relative;
+    /* margin: 0 7.5px; */
+}
+#navbarSupportedContent {
+  text-align: center;
+  /*background-color: #a5a3a3;*/
+  color: white ;
+  font-weight: 500;
+  font-size: medium;
+}
+
+
+#navbarSupportedContent .dropdown-toggle{
+  background-color:black;
+  width: 100%;
+}
+#navbarSupportedContent .nav-item .dropdown-menu .dropdown-item{
+  border-bottom: 1px solid #aaa;
+}
+#navbarSupportedContent .nav-item .dropdown-menu .dropdown-item:hover{
+  /*background-color: #a5a3a3;*/
+}
+
+#navbarSupportedContent ul .nav-link{
+  color: white ;
+}
+#navbarSupportedContent ul li.nav-item:not(.dropdown):hover a.nav-link {
+  color: black;
+}
+
+.navbar.navbar-expand-lg {
+  padding: 0;
+}
+
+.row.align-items-center {
+  margin: 0 10%;
+}
+
+.fixed {
+  position: fixed !important;
+  top: 0;
+  width: 100%;
+  margin-bottom: 200px;
+  background-color: #ffffff;
+  z-index: 10000;
+}
+
+.div-padding {
+  padding-bottom: 140px;
+}
+
+.sub-user{
+  position: absolute;
+  /* width: 150px; */
+  display: none;
+  border-radius: 1rem;
+  background-color: #f0f0f0;
+  align-items: center;
+  /* padding-right: 40px; */
+  list-style: none;
+  width: 150px;
+}
+
+.sub-user .dropdown-item {
+  /* text-align: center; */
+  justify-content: center;
+}
+.user:hover .sub-user {
+  display: block;
+  position: absolute;
+  z-index: 100;
+}
+.user{
+  text-decoration: none;
+  margin: 10px;
+  list-style: none;
+  display: flex;
+}
+.cart{
+  text-decoration: none;
+  list-style: none;
+}
+
+.user-a, .width-user {
+  width: 100px;
+  color: #000000;
+}
+
+.dropdown-menu.show {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+
