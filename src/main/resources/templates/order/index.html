@@ -22,6 +22,17 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="/template2/css/style.css" rel="stylesheet">
+    <style>
+        body .modal-dialog { /* Width */
+            max-width: 100%;
+            width: auto !important;
+            display: inline-block;
+            justify-content: center;
+        }
+        .modal{
+            text-align: center;
+        }
+    </style>
 
 </head>
 <body>
@@ -40,7 +51,7 @@
             <div class="nav nav-tabs justify-content-center border-secondary mb-4">
                 <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Chờ xác nhận</a>
                 <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Đang giao</a>
-                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Lịch sử mua hàng</a>
+<!--                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Lịch sử mua hàng</a>-->
             </div>
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="tab-pane-1">
@@ -57,14 +68,29 @@
                                     <td>
                                         <div>Giá trị đơn hàng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
                                         <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>
-                                        <div><a th:href="@{/order/details?id={id}(id=${order.getId()})}">Chi tiết</a></div>
+                                        <a data-toggle="modal" th:data-target="'#detail-' + ${order.getId()}" class="btn btn-primary">Chi tiết</a>
+                                        <div class="modal fade" th:id="'detail-' + ${order.getId()}" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div class="modal-dialog d-flex justify-content-center">
+                                                <div class="modal-content w-75">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Chi tiết đơn hàng</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body p-4">
+                                                        <div th:insert="/order/details :: detail"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                     </td>
                                 </tr>
                             </table>
+                            </table>
+                    </div>
 
-                        </div>
-                        </table>
                     </div>
                 <div class="tab-pane fade" id="tab-pane-2">
                     <div th:each="order : ${deliverOrders}">
@@ -80,7 +106,22 @@
                                     <td>
                                         <div>Giá trị đơn hàng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
                                         <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>
-                                        <div><a th:href="@{/order/details?id={id}(id=${order.getId()})}">Chi tiết</a></div>
+                                        <a data-toggle="modal" th:data-target="'#detail-' + ${order.getId()}" class="btn btn-primary">Chi tiết</a>
+                                        <div class="modal fade" th:id="'detail-' + ${order.getId()}" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div class="modal-dialog d-flex justify-content-center">
+                                                <div class="modal-content w-75">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Chi tiết đơn hàng</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body p-4">
+                                                        <div th:insert="/order/details :: detail"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                     </td>
                                     <td>
@@ -111,29 +152,29 @@
                         </div>
                         </table>
                     </div>
-                <div class="tab-pane fade" id="tab-pane-3">
-                    <div th:each="order : ${history}">
-                        <table class="table table-active">
-                            <tr>
-                                <div class="text-right"><small th:text="${#temporals.format(order.getOrderTime(), 'dd-MM-yyyy HH:mm:ss')}"></small></div>
-                                <div style="background-color: rgba(0, 0, 0, 0.075);">
-                                    <img th:src="${order.getItems()[0].product.avatar}" style="width:75px;height:75px;">
-                                    <span th:text="'  ' + ${order.getItems()[0].product.productName}"></span>
-                                </div>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div>Giá trị đơn hàng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
-                                    <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>
-                                    <div><a th:href="@{/order/details?id={id}(id=${order.getId()})}">Chi tiết</a></div>
+<!--                <div class="tab-pane fade" id="tab-pane-3">-->
+<!--                    <div th:each="order : ${history}">-->
+<!--                        <table class="table table-active">-->
+<!--                            <tr>-->
+<!--                                <div class="text-right"><small th:text="${#temporals.format(order.getOrderTime(), 'dd-MM-yyyy HH:mm:ss')}"></small></div>-->
+<!--                                <div style="background-color: rgba(0, 0, 0, 0.075);">-->
+<!--                                    <img th:src="${order.getItems()[0].product.avatar}" style="width:75px;height:75px;">-->
+<!--                                    <span th:text="'  ' + ${order.getItems()[0].product.productName}"></span>-->
+<!--                                </div>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>-->
+<!--                                    <div>Giá trị đơn hàng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>-->
+<!--                                    <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>-->
+<!--                                    <div><a th:href="@{/order/details?id={id}(id=${order.getId()})}">Chi tiết</a></div>-->
 
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                        </table>
-                    </div>
-                </div>
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
         </div>
     </div>

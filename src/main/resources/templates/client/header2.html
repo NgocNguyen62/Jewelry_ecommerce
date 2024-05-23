@@ -92,21 +92,14 @@
             <div class="navbar-nav mr-auto py-0">
               <a th:href="@{/home}" th:class="${currentUrl == '/home' ? 'nav-item nav-link active' : 'nav-item nav-link'}">Trang chủ</a>
               <a th:href="@{/products}" th:class="${currentUrl == '/products' ? 'nav-item nav-link active' : 'nav-item nav-link'}">Sản phẩm</a>
-<!--              <a href="#" class="nav-item nav-link">Shop Detail</a>-->
-<!--              <div class="nav-item dropdown">-->
-<!--                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>-->
-<!--                <div class="dropdown-menu rounded-0 m-0">-->
-<!--                  <a href="cart.html" class="dropdown-item">Shopping Cart</a>-->
-<!--                  <a href="checkout.html" class="dropdown-item">Checkout</a>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <a href="contact.html" class="nav-item nav-link">Contact</a>-->
+              <a th:href="@{/order/index}" th:class="${currentUrl == '/order/index' ? 'nav-item nav-link active' : 'nav-item nav-link'}">Đơn hàng</a>
             </div>
             <div class="navbar-nav">
               <a class="nav-item nav-link" th:unless="${#authorization.expression('isAuthenticated()')}" th:href="@{/login}">Đăng nhập</a>
               <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" th:if="${#authorization.expression('isAuthenticated()')}" th:text="${#authentication.name}"></a>
               <div class="dropdown-menu">
                 <a th:href="@{/order/index}" class="dropdown-item">Đơn hàng</a>
+                <a th:href="@{/order/history}" class="dropdown-item">Lịch sử mua hàng</a>
                 <a th:href="@{/myAccount}" class="dropdown-item">Thông tin tài khoản</a>
                 <a th:href="@{/changePassForm}" class="dropdown-item">Đổi mật khẩu</a>
                 <a th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}" class="dropdown-item" th:href="@{/dashboard}">Quản lý</a>

@@ -29,23 +29,37 @@
 <!-- Page Header Start -->
 <div class="container-fluid bg-secondary mb-5">
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-        <h1 class="font-weight-semi-bold text-uppercase mb-3">Đơn hàng đã đặt</h1>
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Lịch sử mua hàng</h1>
     </div>
 </div>
 <!-- Page Header End -->
 <div class="col-3"></div>
 <div class="container col-6">
-    <table class="table table-active">
-        <tr th:each="order : ${orders}">
-            <td>
-                <div>Thời gian đặt: <span th:text="${order.getOrderTime()}"></span></div>
-                <div>Giá trị đơn hàng: <span th:text="${order.getTotalPrice()}"></span></div>
-                <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>
-                <div><a th:href="@{/order/details?id={id}(id=${order.getId()})}">Chi tiết</a></div>
-            </td>
-        </tr>
+    <div th:each="order : ${orders}">
+        <table class="table table-active">
+            <tr>
+                <div class="text-right"><small th:text="${#temporals.format(order.getOrderTime(), 'dd-MM-yyyy HH:mm:ss')}"></small></div>
+                <div style="background-color: rgba(0, 0, 0, 0.075);">
+                    <img th:src="${order.getItems()[0].product.avatar}" style="width:75px;height:75px;">
+                    <span th:text="'  ' + ${order.getItems()[0].product.productName}"></span>
+                </div>
+            </tr>
+            <tr>
+                <td>
+                    <div>Giá trị đơn hàng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+                    <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>
+                    <div><a th:href="@{/order/details?id={id}(id=${order.getId()})}">Chi tiết</a></div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
     </table>
 </div>
+</div>
+<!-- Footer Start -->
+<div th:insert="/client/footer :: footer"></div>
+<!-- Footer End -->
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>

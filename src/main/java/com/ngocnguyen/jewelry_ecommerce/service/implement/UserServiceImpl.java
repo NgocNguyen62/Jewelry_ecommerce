@@ -132,4 +132,13 @@ public class UserServiceImpl implements UserService {
     public DataTablesOutput<User> getAllUser(DataTablesInput input){
         return userTableRepository.findAll(input);
     }
+
+    @Override
+    public User getAdmin(){
+        Optional<User> user = userRepository.findByEmail("admin");
+        if(user.isPresent()){
+            return user.get();
+        }
+        return user.orElseThrow();
+    }
 }

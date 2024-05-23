@@ -27,6 +27,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
     <script src="/js/form.js"></script>
     <style>
         body{
@@ -45,6 +51,10 @@
         label.error{
             color: red;
         }
+        #map_div{
+            height: 300px;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -57,29 +67,7 @@
 </div>
 <!-- Page Header End -->
     <div class="preview-order">
-        <div class="form">
-            <form id="user-receiver" th:object="${order}" th:action="@{order}" method="post">
-                <input type="hidden" th:field="*{id}">
-                <div class="form-group">
-                    <label th:text="'Họ và tên'" th:for="receiver_name"></label>
-                    <input type="text" th:field="*{receiverName}" class="form-control">
-                </div>
 
-                <div class="form-group">
-                    <label th:text="'Số điện thoại'" th:for="receiver_phone"></label>
-                    <input type="text" th:field="*{receiverPhone}" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label th:text="'Địa chỉ'" th:for="receiver_address"></label>
-                    <input type="text" th:field="*{receiverAddress}" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label th:text="'Ghi chú'" th:for="note"></label>
-                    <textarea type="text" th:field="*{note}"></textarea>
-                </div>
-                <button type="submit" class="btn btn-block btn-primary my-3 py-3">Đặt hàng</button>
-            </form>
-        </div>
         <div class="items-order">
             <h3>Chi tiết đơn hàng</h3>
             <table class="table table-active">
@@ -97,26 +85,78 @@
                         <span th:text="${item.product.productName}"></span>
                     </td>
                     <td th:text="${item.product.category.getCategoryName()}"></td>
-                    <td th:text="${item.product.price}"></td>
-                    <td th:text="${item.product.discount}"></td>
+                    <td th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + 'đ'"></td>
+                    <td th:text="${#numbers.formatDecimal(item.product.discount, 0, 'COMMA', 0, 'POINT')} + 'đ'"></td>
                     <td>
                         <span th:text="${item.quantity}"></span>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <div class="total">Tổng tiền: <span th:text="${order.getTotalPrice()}"></span></div>
-                        <div>Phí vận chuyển: <span th:text="${order.getShipping()}"></span></div>
+                        <div class="total">Tổng tiền: <span th:text="${#numbers.formatDecimal(order.getTotalPrice(), 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+                        <div>Phí vận chuyển: <span th:text="${#numbers.formatDecimal(order.getShipping(), 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+                        <div>Tổng cộng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
 <!--                        <div>Thời gian đặt: <span th:text="${order.getOrderTime()}"></span></div>-->
                     </td>
                 </tr>
             </table>
         </div>
-    </div>
+        <div class="form">
+            <form id="user-receiver" th:object="${order}" th:action="@{order}" method="post">
+                <input type="hidden" th:field="*{id}">
+                <div class="form-group">
+                    <label th:text="'Họ và tên'" th:for="receiverName"></label>
+                    <input type="text" th:field="*{receiverName}" class="form-control">
+                </div>
 
-<!--    <div>-->
-<!--        <a class="btn btn-success" th:href="@{/order/order}">Đặt hàng</a>-->
-<!--    </div>-->
+                <div class="form-group">
+                    <label th:text="'Số điện thoại'" th:for="receiverPhone"></label>
+                    <input type="text" th:field="*{receiverPhone}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label th:text="'Địa chỉ'" th:for="receiverAddress"></label>
+                    <input type="text" th:field="*{receiverAddress}" id="address" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label th:text="'Ghi chú'" th:for="note"></label>
+                    <textarea type="text" th:field="*{note}"></textarea>
+                </div>
+                <button type="submit" class="btn btn-block btn-primary my-3 py-3">Đặt hàng</button>
+            </form>
+        </div>
+
+    </div>
+<div id="map_div"></div>
+<!-- Footer Start -->
+<div th:insert="/client/footer :: footer"></div>
+<!-- Footer End -->
+
+<!--<script async-->
+<!--        src="https://maps.googleapis.com/maps/api/js?sensor=false&loading=async&callback=initMap">-->
+<!--</script>-->
+<!--<script>-->
+<!--    let map;-->
+<!--    // initMap is now async-->
+<!--    async function initMap() {-->
+<!--        // Request libraries when needed, not in the script tag.-->
+<!--        const { Map } = await google.maps.importLibrary("maps");-->
+<!--        // Short namespaces can be used.-->
+<!--        map = new Map(document.getElementById("map"), {-->
+<!--            center: { lat: -34.397, lng: 150.644 },-->
+<!--            zoom: 8,-->
+<!--        });-->
+<!--    }-->
+
+<!--    initMap();-->
+<!--</script>-->
+<!--<script-->
+<!--        src="https://maps.googleapis.com/maps/api/js?callback=initMap&signed_in=true"-->
+<!--        async-->
+<!--        defer-->
+<!--&gt;</script>-->
+
+<!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
+<script src="/js/map.js"></script>
 <script>
     $().ready(function (){
         $("#user-receiver").validate({

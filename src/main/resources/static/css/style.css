@@ -3376,7 +3376,7 @@ blockquote{
 	text-decoration: none;
 }
 .sbToggle{
-	background: url("../template/images/down.png") no-repeat center center;
+	background: url("template2/images/down.png") no-repeat center center;
 	display: block;
 	height: 33px;
 	outline: none;

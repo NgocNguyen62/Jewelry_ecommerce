@@ -44,21 +44,25 @@ public class WebSercurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-                .authorizeHttpRequests((authorize)->authorize
-                        .requestMatchers("/user/add").hasAuthority("ADMIN")
+                .authorizeHttpRequests((authorize) -> authorize
+                                .requestMatchers("/dashboard").hasAuthority("ADMIN")
+                                .requestMatchers("/user/*").hasAuthority("ADMIN")
+                                .requestMatchers("/product/*").hasAuthority("ADMIN")
+                                .requestMatchers("/category/*").hasAuthority("ADMIN")
 //                        .requestMatchers("/cart/index").
-                        .anyRequest().permitAll()
+                                .anyRequest().permitAll()
                 ).formLogin(
-                        form ->form
+                        form -> form
                                 .loginPage("/login")
 //                                .loginProcessingUrl("/login")
                                 .successHandler(successHandler)
                                 .permitAll()
                 ).logout(
-                        logout->logout
+                        logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                                 .permitAll()
                 );
+
         return http.build();
     }
     @Autowired

@@ -57,14 +57,18 @@ public class CartServiceImpl implements CartService {
             Optional<CartItems> cartItems = cartItemsRepository.findCartItemsByCart_idAndProduct_id(cart.get().getId(), productId);
             Optional<Product> product = productRepository.findById(productId);
             if(product.isPresent()){
-                if(cartItems.isPresent()){
-                    updateQuantity(productId, CommonConstants.INTIALIZE_VALUE);
+                if(product.get().getQuantity() > 0) {
+                    if(cartItems.isPresent()){
+                        updateQuantity(productId, CommonConstants.INTIALIZE_VALUE);
+                    } else {
+                        CartItems newItem = new CartItems();
+                        newItem.setCart(cart.get());
+                        newItem.setProduct(product.get());
+                        newItem.setQuantity(CommonConstants.INTIALIZE_VALUE);
+                        return cartItemsRepository.save(newItem);
+                    }
                 } else {
-                    CartItems newItem = new CartItems();
-                    newItem.setCart(cart.get());
-                    newItem.setProduct(product.get());
-                    newItem.setQuantity(CommonConstants.INTIALIZE_VALUE);
-                    return cartItemsRepository.save(newItem);
+                    throw new Exception("Số lượng còn lại không đủ");
                 }
             } else {
                 throw new Exception("Sản phẩm không tồn tại");

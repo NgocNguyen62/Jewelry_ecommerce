@@ -7,6 +7,7 @@ import com.ngocnguyen.jewelry_ecommerce.entity.User;
 import com.ngocnguyen.jewelry_ecommerce.service.CartService;
 import com.ngocnguyen.jewelry_ecommerce.service.CategoryService;
 import com.ngocnguyen.jewelry_ecommerce.service.FavoriteService;
+import com.ngocnguyen.jewelry_ecommerce.service.OrderService;
 import com.ngocnguyen.jewelry_ecommerce.service.ProductService;
 import com.ngocnguyen.jewelry_ecommerce.service.RateService;
 import com.ngocnguyen.jewelry_ecommerce.service.UserService;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,10 +51,12 @@ public class HomeController {
     private UserService userService;
     @Autowired
     private FavoriteService favoriteService;
+    @Autowired
+    private OrderService orderService;
 
     @ModelAttribute("currentUrl")
     public String getCurrentUrl(HttpServletRequest request) {
-        return request.getRequestURI();
+        return request.getContextPath() + request.getRequestURI();
     }
 
     @ModelAttribute("countCart")
@@ -106,6 +110,11 @@ public class HomeController {
 
         model.addAttribute("labelTopSale", productService.nameOfTopSales(10));
         model.addAttribute("dataTopSale", productService.countInTopSales(10));
+
+        LocalDate end = LocalDate.now();
+        LocalDate start = end.minusDays(7);
+        model.addAttribute("arrDays", orderService.arrDay(start, end));
+        model.addAttribute("saleByDay", orderService.saleByDay(start, end));
         return "/dashboard";
     }
     @RequestMapping("/home")
@@ -190,6 +199,24 @@ public class HomeController {
     public String changePassForm(){
         return "/client/change-password";
     }
+    private String pageProduct(List<Product> products,
+                               Model model,
+                               @RequestParam("page") Optional<Integer> page,
+                               @RequestParam("size") Optional<Integer> size){
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(CommonConstants.SIZE_OF_PAGE);
+        Page<Product> productPage = productService.getPageProducts(PageRequest.of(currentPage - 1, pageSize), products);
+//        model.addAttribute("title", categoryService.findById(id).get().getCategoryName());
+        model.addAttribute("productPage", productPage);
+        int totalPages = productPage.getTotalPages();
+        if(totalPages > 0){
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        return "/client/product";
+    }
 
     @RequestMapping("/category")
     public String listProducts(Model model,
@@ -209,5 +236,25 @@ public class HomeController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
         return "/client/product";
+    }
+    @RequestMapping("/topSale")
+    public String topSale(Model model,
+                          @RequestParam("page") Optional<Integer> page,
+                          @RequestParam("size") Optional<Integer> size){
+        List<Product> topSale = productService.sortBySales();
+        model.addAttribute("title", "Sản phẩm bán chạy");
+        return pageProduct(topSale, model, page, size);
+    }
+    @RequestMapping("/newest")
+    public String newest(Model model,
+                          @RequestParam("page") Optional<Integer> page,
+                          @RequestParam("size") Optional<Integer> size){
+        List<Product> top = productService.sortByNewest();
+        model.addAttribute("title", "Sản phẩm mới nhất");
+        return pageProduct(top, model, page, size);
+    }
+    @RequestMapping("/chat")
+    public String chat(){
+        return "/client/chat";
     }
 }

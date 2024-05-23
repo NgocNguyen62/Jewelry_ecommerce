@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
             String avatar = ImageUpload(product.getId(), product.getFile());
             product.setAvatar(avatar);
         }
-        if(!(product.getFiles().length == 0)){
+        if(!product.getFiles()[0].isEmpty()){
             StringBuilder builder = new StringBuilder();
             for (MultipartFile file : product.getFiles()) {
                 String image = ImageUpload(product.getId(), file);

@@ -12,15 +12,34 @@
     <link rel="stylesheet" href="/css/sidebar.css">
     <style>
         .pie-chart{
-            width: 200px;
-            height: 200px;
+            width: 250px;
+            /*height: 200px;*/
         }
         .bar-chart{
-            width: 600px;
-            height: 800px;
+            /*width: 600px;*/
+            height: 400px;
+
+        }
+        .line-chart{
+            width: 90%;
+            margin-bottom: 10px;
+            /*height: 800px;*/
         }
         .chart{
-            margin-top: 20px;
+            margin-top: 30px;
+            background-color: white;
+            box-shadow: #a2a0a6;
+            height: 300px;
+        }
+        .row{
+            margin-left: 20px;
+            display: flex;
+        }
+        .content{
+            background-color: #eeeeee;
+        }
+        span{
+            font-size: large;
         }
     </style>
 </head>
@@ -28,20 +47,36 @@
 
 <div th:insert="/sidebar :: sidebar"></div>
 <div class="content">
+
     <div th:insert="/navbar :: navbar"></div>
-    <div class="chart">
-        <span>Thống kê sản phẩm theo phân loại</span>
-        <div class="pie-chart">
-            <canvas id="Pie-chart"></canvas>
+    <div class="container-fluid">
+        <div class="chart col-md-5">
+            <span>Thống kê sản phẩm theo phân loại</span>
+            <div class="pie-chart">
+                <canvas id="Pie-chart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="chart col-md-6">
+            <span>Số lượng bán theo ngày</span>
+            <div class="line-chart">
+                <canvas id="sale-by-day"></canvas>
+            </div>
         </div>
     </div>
+
     <div class="chart">
         <span>Top 10 sản phẩm bán chạy nhất</span>
         <div class="bar-chart">
             <canvas id="top-sales"></canvas>
         </div>
     </div>
+
+
 </div>
+<footer>
+
+</footer>
 
 <!--    <div th:text="${label}"></div>-->
     <script type="text/javascript" th:inline="javascript">
@@ -51,6 +86,9 @@
 
         var labelTopSale = /*[[${labelTopSale}]]*/[];
         var dataTopSale = /*[[${dataTopSale}]]*/[];
+
+        var arrDays = /*[[${arrDays}]]*/[];
+        var saleByDay = /*[[${saleByDay}]]*/[];
         /*]]>*/
     </script>
     <script src="/js/chart.js"></script>

@@ -7,6 +7,7 @@
         <sourceRoots>
           <root url="file://$MODULE_DIR$/src/main/java" />
           <root url="file://$MODULE_DIR$/src/main/resources" />
+          <root url="file://$MODULE_DIR$/target/generated-sources/annotations" />
         </sourceRoots>
       </configuration>
     </facet>
@@ -31,6 +32,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -50,6 +52,20 @@
     <orderEntry type="library" name="jquery-3.4.1" level="application" />
     <orderEntry type="library" name="bootstrap.bundle" level="application" />
     <orderEntry type="library" name="datatables" level="application" />
+    <orderEntry type="library" name="jquery-3.2.1" level="application" />
+    <orderEntry type="library" name="dataTables" level="application" />
+    <orderEntry type="library" name="dataTables.bootstrap" level="application" />
+    <orderEntry type="library" name="dataTables.checkboxes" level="application" />
+    <orderEntry type="library" name="buttons.html5" level="application" />
+    <orderEntry type="library" name="buttons.print" level="application" />
+    <orderEntry type="library" name="dataTables.buttons" level="application" />
+    <orderEntry type="library" name="buttons.dataTables" level="application" />
+    <orderEntry type="library" name="dataTables.select" level="application" />
+    <orderEntry type="library" name="select.dataTables" level="application" />
+    <orderEntry type="library" name="jszip" level="application" />
+    <orderEntry type="library" name="buttons.colVis" level="application" />
+    <orderEntry type="library" name="dataTables.dataTables" level="application" />
+    <orderEntry type="library" name="loader" level="application" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-jpa:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-aop:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.9.21" level="project" />
@@ -188,18 +204,12 @@
     <orderEntry type="library" name="Maven: com.querydsl:querydsl-core:5.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.mysema.commons:mysema-commons-lang:0.2.4" level="project" />
     <orderEntry type="library" name="Maven: jakarta.annotation:jakarta.annotation-api:2.1.1" level="project" />
-    <orderEntry type="library" name="jquery-3.2.1" level="application" />
-    <orderEntry type="library" name="dataTables" level="application" />
-    <orderEntry type="library" name="dataTables.bootstrap" level="application" />
-    <orderEntry type="library" name="dataTables.checkboxes" level="application" />
-    <orderEntry type="library" name="buttons.html5" level="application" />
-    <orderEntry type="library" name="buttons.print" level="application" />
-    <orderEntry type="library" name="dataTables.buttons" level="application" />
-    <orderEntry type="library" name="buttons.dataTables" level="application" />
-    <orderEntry type="library" name="dataTables.select" level="application" />
-    <orderEntry type="library" name="select.dataTables" level="application" />
-    <orderEntry type="library" name="jszip" level="application" />
-    <orderEntry type="library" name="buttons.colVis" level="application" />
-    <orderEntry type="library" name="dataTables.dataTables" level="application" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-websocket:3.2.1" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-messaging:6.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-websocket:6.1.2" level="project" />
+    <orderEntry type="library" name="sockjs-client" level="application" />
+    <orderEntry type="library" name="stomp.js" level="application" />
+    <orderEntry type="library" name="leaflet" level="application" />
+    <orderEntry type="library" name="mapbox-polyline" level="application" />
   </component>
 </module>

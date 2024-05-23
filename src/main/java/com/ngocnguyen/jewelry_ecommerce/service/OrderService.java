@@ -3,6 +3,7 @@ package com.ngocnguyen.jewelry_ecommerce.service;
 import com.ngocnguyen.jewelry_ecommerce.entity.Order;
 import com.ngocnguyen.jewelry_ecommerce.entity.OrderItems;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,4 +33,8 @@ public interface OrderService {
     List<Order> getWaitConfirm();
 
     List<Order> getCancelRequest();
+
+    int[] saleByDay(LocalDate start, LocalDate end);
+
+    String[] arrDay(LocalDate start, LocalDate end);
 }

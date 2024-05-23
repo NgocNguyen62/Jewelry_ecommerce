@@ -25,4 +25,6 @@ public interface UserService {
     void updatePassword(User user, String newPass);
 
     DataTablesOutput<User> getAllUser(DataTablesInput input);
+
+    User getAdmin();
 }

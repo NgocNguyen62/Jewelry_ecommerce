@@ -71,7 +71,7 @@ public class ProductController {
     @GetMapping("add")
     @PreAuthorize("isAuthenticated()")
     public String addProduct(Model model){
-        model.addAttribute("editMode", true);
+        model.addAttribute("editMode", false);
         Product product = new Product();
         model.addAttribute("product", product);
         return "product/add";
@@ -83,17 +83,14 @@ public class ProductController {
      */
     @PostMapping("save")
     public String save(@ModelAttribute("product") Product product) throws Exception {
-        try {
-//            System.out.println(product);
-            productService.create(product);
-        } catch (Exception e){
-            throw new Exception(e);
-        }
+
+        productService.create(product);
+
         return "redirect:/product/index";
     }
 
     @GetMapping("edit")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String edit(@RequestParam("id") Long id, Model model){
         Optional<Product> productEdit = productService.findById(id);
         model.addAttribute("editMode", true);

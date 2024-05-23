@@ -36,7 +36,15 @@
       color: #626067 ;
       line-height: 24px;
     }
-
+    body .modal-dialog { /* Width */
+      max-width: 100%;
+      width: auto !important;
+      display: inline-block;
+      justify-content: center;
+    }
+    .modal{
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -51,43 +59,65 @@
           <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Yêu cầu hủy đơn</a>
         </div>
         <div class="tab-content">
-          <div class="tab-pane fade show active" id="tab-pane-1">
-            <table class="table table-active">
-              <tr th:each="order : ${confirmRequest}">
-                <td>
+          <div class="tab-pane active" id="tab-pane-1">
+            <div th:each="order : ${confirmRequest}">
+              <table class="table table-active">
+                <tr>
+                  <div class="text-left"><small th:text="${order.getUser().getEmail()}"></small></div>
                   <div class="text-right"><small th:text="${#temporals.format(order.getOrderTime(), 'dd-MM-yyyy HH:mm:ss')}"></small></div>
+
                   <img th:src="${order.getItems()[0].product.avatar}" style="width:75px;height:75px;">
-                  <span th:text="${order.getItems()[0].product.productName}"></span>
-                  <div>Giá trị đơn hàng: <span th:text="${order.getTotalPrice()}"></span></div>
-                  <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>
-                  <div><a th:href="@{/order/details?id={id}(id=${order.getId()})}">Chi tiết</a></div>
-                </td>
-                <td>
-                  <a class="btn btn-success" th:href="@{/order/confirmRequest?id={id}(id=${order.getId()})}">Xác nhận</a>
-                  <a data-toggle="modal" th:data-target="'#cancelOrder-' + ${order.getId()}" class="btn btn-danger">Hủy đơn</a>
-                  <div class="modal fade" th:id="'cancelOrder-' + ${order.getId()}" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog d-flex justify-content-center">
-                      <div class="modal-content w-75">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLabel1">Lý do hủy đơn</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body p-4">
-                          <form th:action="@{cancel?id={id}(id=${order.getId()})}" method="post">
-                            <div data-mdb-input-init class="form-outline mb-4">
-                              <textarea type="text" name="reason" class="form-control"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary" data-mdb-dismiss="modal">Gửi</button>
-                          </form>
+                  <span th:text="'  ' + ${order.getItems()[0].product.productName}"></span>
+                </tr>
+                <tr>
+                  <td>
+                    <div>Giá trị đơn hàng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
+                    <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>
+                    <a data-toggle="modal" th:data-target="'#detail-' + ${order.getId()}" class="btn btn-primary">Chi tiết</a>
+                    <div class="modal fade" th:id="'detail-' + ${order.getId()}" tabindex="-1" role="dialog" aria-hidden="true">
+                      <div class="modal-dialog d-flex justify-content-center">
+                        <div class="modal-content w-75">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Chi tiết đơn hàng</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body p-4">
+                            <div th:insert="/order/details :: detail"></div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            </table>
+                  </td>
+                  <td>
+                    <a onclick="confirm()" class="btn btn-success" th:href="@{/order/confirmRequest?id={id}(id=${order.getId()})}">Xác nhận</a>
+                    <a data-toggle="modal" th:data-target="'#cancelOrder-' + ${order.getId()}" class="btn btn-danger">Hủy đơn</a>
+                    <div class="modal fade" th:id="'cancelOrder-' + ${order.getId()}" tabindex="-1" role="dialog" aria-hidden="true">
+                      <div class="modal-dialog d-flex justify-content-center">
+                        <div class="modal-content w-75">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel1">Lý do hủy đơn</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body p-4">
+                            <form th:action="@{cancel?id={id}(id=${order.getId()})}" method="post">
+                              <div data-mdb-input-init class="form-outline mb-4">
+                                <textarea type="text" name="reason" class="form-control"></textarea>
+                              </div>
+                              <button type="submit" class="btn btn-primary" data-mdb-dismiss="modal">Gửi</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
           </div>
           <div class="tab-pane fade" id="tab-pane-2">
               <div th:each="order : ${cancelRequest}">
@@ -103,8 +133,22 @@
                 <td>
                   <div>Giá trị đơn hàng: <span th:text="${#numbers.formatDecimal(order.getTotalPrice() + shipping, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span></div>
                   <div>Trạng thái: <span th:text="${order.getStatus()}"></span></div>
-                  <div><a th:href="@{/order/details?id={id}(id=${order.getId()})}">Chi tiết</a></div>
-
+                  <a data-toggle="modal" th:data-target="'#detail-' + ${order.getId()}" class="btn btn-primary">Chi tiết</a>
+                  <div class="modal fade" th:id="'detail-' + ${order.getId()}" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog d-flex justify-content-center">
+                      <div class="modal-content w-75">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Chi tiết đơn hàng</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body p-4">
+                          <div th:insert="/order/details :: detail"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
                 <td>
                   <a onclick="cancelMessage()" class="btn btn-success" th:href="@{/order/cancel?id={id}(id=${order.getId()})}">Xác nhận</a>
@@ -140,10 +184,13 @@
   </div>
 </div>
 </div>
-  <script src="/template2/js/main.js"></script>
+<!--  <script src="/template2/js/main.js"></script>-->
 <script>
   function cancelMessage(){
     alert("Đơn hàng đã hủy")
+  }
+  function confirm(){
+    alert("Đã xác nhận đơn hàng")
   }
 </script>
 </body>

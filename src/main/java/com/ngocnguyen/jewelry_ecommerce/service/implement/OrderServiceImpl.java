@@ -20,7 +20,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -142,7 +145,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getDeliveringOrder() throws Exception {
-        return orderRepository.findAllByUser_idAndStatus(getCurrentUser().getId(), CommonConstants.DELIVERING_STATUS);
+        List<Order> delivering = orderRepository.findAllByUser_idAndStatus(getCurrentUser().getId(), CommonConstants.DELIVERING_STATUS);
+        List<Order> sorted = delivering.stream()
+                        .sorted(Comparator.comparing(Order::getOrderTime, Comparator.nullsLast(Comparator.reverseOrder()))).toList();
+        return sorted;
+
     }
 
     @Override
@@ -150,7 +157,9 @@ public class OrderServiceImpl implements OrderService {
         List<Order> waitConfirm = orderRepository.findAllByUser_idAndStatus(getCurrentUser().getId(), CommonConstants.WAIT_STATUS);
         List<Order> waitCancel = orderRepository.findAllByUser_idAndStatus(getCurrentUser().getId(), CommonConstants.WAIT_CANCEL);
         waitConfirm.addAll(waitCancel);
-        return waitConfirm;
+        List<Order> sorted = waitConfirm.stream()
+                .sorted(Comparator.comparing(Order::getOrderTime, Comparator.nullsLast(Comparator.reverseOrder()))).toList();
+        return sorted;
     }
 
     @Override
@@ -168,7 +177,10 @@ public class OrderServiceImpl implements OrderService {
         List<Order> success = orderRepository.findAllByUser_idAndStatus(getCurrentUser().getId(), CommonConstants.SUCCESS_STATUS);
         List<Order> cancel = orderRepository.findAllByUser_idAndStatus(getCurrentUser().getId(), CommonConstants.CANCEL_STATUS);
         success.addAll(cancel);
-        return success;
+        List<Order> sorted = success.stream()
+                .sorted(Comparator.comparing(Order::getOrderTime, Comparator.nullsLast(Comparator.reverseOrder()))).toList();
+        return sorted;
+
     }
 
     @Override
@@ -197,10 +209,52 @@ public class OrderServiceImpl implements OrderService {
     }
     @Override
     public List<Order> getWaitConfirm(){
+
         return orderRepository.findAllByStatus(CommonConstants.WAIT_STATUS);
     }
     @Override
     public List<Order> getCancelRequest(){
         return orderRepository.findAllByStatus(CommonConstants.WAIT_CANCEL);
+    }
+    public int countItem(List<Order> orders){
+        int count = 0;
+        for (Order order: orders) {
+            count += order.getItems().size();
+        }
+        return count;
+    }
+    private List<Order> findOrdersByDay(String status, LocalDate date){
+        return orderRepository.findAllByStatusAndOrderTimeBetween(status, date.atStartOfDay(), date.plusDays(1).atStartOfDay());
+    }
+    @Override
+    public int[] saleByDay(LocalDate start, LocalDate end){
+        ArrayList<Integer> sale = new ArrayList<>();
+
+        LocalDate current = start;
+        while (!current.isAfter(end)){
+            sale.add(countItem(findOrdersByDay(CommonConstants.SUCCESS_STATUS, current)));
+            current = current.plusDays(1);
+        }
+        int[] result = new int[sale.size()];
+        for (int i = 0; i < sale.size(); i++) {
+            result[i] = sale.get(i);
+        }
+
+        return result;
+    }
+    @Override
+    public String[] arrDay(LocalDate start, LocalDate end){
+        ArrayList<String> dates = new ArrayList<>();
+        LocalDate current = start;
+        while (!current.isAfter(end)){
+            dates.add(current.toString());
+            current = current.plusDays(1);
+        }
+        String[] result = new String[dates.size()];
+        for (int i = 0; i < dates.size(); i++) {
+            result[i] = dates.get(i);
+        }
+
+        return result;
     }
 }

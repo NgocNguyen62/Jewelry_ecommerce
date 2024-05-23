@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Sign Up</title>
+    <title>Đăng ký</title>
 
     <style>
         label.error{
@@ -73,18 +73,19 @@
                         </div>
                         <div class="form-group">
                             <label th:text="'Địa chỉ'" th:for="address"></label>
-                            <input type="text" th:field="*{address}" class="form-control">
+                            <input type="text" th:field="*{address}" id="address" class="form-control">
                         </div>
+                        <div id="map_div"></div>
                         <div class="form-group">
                             <input type="submit" name="submit" id="submit" class="form-submit" value="Tạo tài khoản"/>
                         </div>
                     </form>
+                    <a class="link=login" href="/login">Đã có tài khoản? Đăng nhập</a>
                 </div>
             </div>
         </section>
 
     </div>
-
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>

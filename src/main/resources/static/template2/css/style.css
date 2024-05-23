@@ -159,7 +159,7 @@ a {
 
 a:hover {
   color: #ba6a62;
-  text-decoration: underline;
+  /*text-decoration: underline;*/
 }
 
 a:not([href]):not([class]) {
@@ -3024,7 +3024,8 @@ input[type="button"].btn-block {
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  left: 0;
+  right: 10px;
+  /*left: 0;*/
   z-index: 1000;
   display: none;
   float: left;
@@ -4047,6 +4048,7 @@ input[type="button"].btn-block {
 .navbar-nav .dropdown-menu {
   position: static;
   float: none;
+  padding-right: 50px;
 }
 
 .navbar-text {

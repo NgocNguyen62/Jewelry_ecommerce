@@ -50,4 +50,19 @@
         },
     });
 
+    var ctx3 = document.getElementById("sale-by-day").getContext('2d');
+    var SaleByDay = new Chart(ctx3, {
+        type: 'line',
+        data: {
+            labels:arrDays,
+            datasets : [{
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 1,
+                hoverOffset: 4,
+                data : saleByDay,
+            }]
+        }
+    })
+
 

@@ -9,7 +9,12 @@ import com.ngocnguyen.jewelry_ecommerce.service.OrderService;
 import com.ngocnguyen.jewelry_ecommerce.service.UserService;
 import com.ngocnguyen.jewelry_ecommerce.utils.CommonConstants;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,9 +27,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @PreAuthorize("isAuthenticated()")
@@ -40,6 +47,8 @@ public class OrderController {
     private FavoriteService favoriteService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private JavaMailSender mailSender;
     @ModelAttribute("countCart")
     public int countCart() throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -60,6 +69,11 @@ public class OrderController {
     @ModelAttribute("cates")
     public List<Category> cates(){
         return categoryService.getAllCate();
+    }
+
+    @ModelAttribute("currentUrl")
+    public String getCurrentUrl(HttpServletRequest request) {
+        return request.getContextPath() + request.getRequestURI();
     }
 
     @GetMapping("preview")
@@ -98,7 +112,7 @@ public class OrderController {
     @GetMapping("details")
     public String details(@RequestParam("id") Long id, Model model){
         model.addAttribute("items", orderService.getItemsInOrder(id));
-        model.addAttribute("order", orderService.getOrder(id));
+        model.addAttribute("order", orderService.getOrder(id).get());
         model.addAttribute("shipping", CommonConstants.SHIPPING);
         model.addAttribute("total", orderService.getOrder(id).get().getTotalPrice() + CommonConstants.SHIPPING);
         return "/order/details";
@@ -108,20 +122,76 @@ public class OrderController {
         orderService.confirmOrder(id);
         return "redirect:/order/index";
     }
-    @GetMapping("cancel")
-    public String cancel(@RequestParam("id") Long id) throws Exception {
+//    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping ("cancel")
+    public String cancel(@RequestParam("id") Long id, @RequestParam("reason") String reason) throws Exception {
         orderService.cancelOrder(id);
-        return "redirect:/order/index";
+        Optional<Order> order = orderService.getOrder(id);
+        if(order.isPresent()){
+            String recipientEmail = order.get().getUser().getEmail();
+            try{
+                sendMail(recipientEmail, reason, false);
+
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        order.orElseThrow();
+        return "redirect:/order/manger";
     }
+
     @PostMapping("requestCancel")
     public String requestCancel(@RequestParam("id") Long id, @RequestParam("reason") String reason){
         orderService.requestCancel(id, reason);
         return "redirect:/order/index";
     }
+    private String contentMail(String reason, boolean isConfirm){
+        if (isConfirm) {
+            return  "<p>Bạn đã đặt thành công đơn hàng</p>"
+                    + "<p>Vào phần đơn hàng để kiểm tra đơn hàng của bạn:</p>";
+        } else {
+            if(reason == ""){
+                return "<p>Đơn hàng đã hủy thành công</p>"
+                        + "<p>Vào phần đơn hàng để kiểm tra đơn hàng của bạn</p>";
+            }
+            return "<p>Đơn hàng đã hủy</p>"
+                    + "<p> Lý do hủy đơn: " + reason + "</p>"
+                    + "<p>Vào phần đơn hàng để kiểm tra đơn hàng của bạn</p>";
+        }
+    }
 
+    private void sendMail(String recipientEmail, String reason, boolean isConfirm) throws MessagingException, UnsupportedEncodingException{
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom("ngoc622512@gmail.com", "Jewelry Shop");
+        helper.setTo(recipientEmail);
+        String subject = "Cửa hàng trang sức";
+
+        String content = contentMail(reason, isConfirm);
+
+        helper.setSubject(subject);
+
+        helper.setText(content, true);
+
+        mailSender.send(message);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/confirmRequest")
     public String confirmOrder(@RequestParam("id") Long id){
         orderService.confirmOrderRequest(id);
+        Optional<Order> order = orderService.getOrder(id);
+        if(order.isPresent()){
+            String recipientEmail = order.get().getUser().getEmail();
+            try{
+                sendMail(recipientEmail, "", true);
+
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        order.orElseThrow();
         return "redirect:/order/manager";
     }
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -131,4 +201,6 @@ public class OrderController {
         model.addAttribute("cancelRequest", orderService.getCancelRequest());
         return "/order/manager";
     }
+
+
 }
